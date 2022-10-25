@@ -1,7 +1,7 @@
 {
-	"name": "boilerplate-project-messagebaord",
-	"version": "0.0.1",
-	"description": "InfoSec project for freeCodeCamp",
+	"name": "freecodecamp-anonymous-message-board",
+	"version": "1.0.0",
+	"description": "An anonymous message board built as part of the freeCodeCamp Information Security certification.",
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js"
@@ -18,9 +18,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/freeCodeCamp/boilerplate-project-messageboard"
+		"url": "https://github.com/StevanFreeborn/freeCodeCamp-Anonymous-Message-Board"
 	},
 	"keywords": [
+		"freecodecamp",
+		"message",
+		"board",
+		"information",
+		"security",
 		"node",
 		"express"
 	],
