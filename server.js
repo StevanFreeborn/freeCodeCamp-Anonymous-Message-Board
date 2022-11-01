@@ -48,7 +48,7 @@ fccTestingRoutes(app);
 apiRoutes(app);
 appRoutes(app);
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.status(404)
     .type('text')
     .send('Not Found');
