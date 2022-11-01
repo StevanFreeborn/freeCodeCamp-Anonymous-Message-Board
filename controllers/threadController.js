@@ -3,3 +3,5 @@ class ThreadController {
         res.sendFile(process.cwd() + '/views/thread.html');
     }
 }
+
+module.exports = ThreadController;
