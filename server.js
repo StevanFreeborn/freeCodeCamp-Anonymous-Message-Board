@@ -5,7 +5,6 @@ const helmetMiddleware = require('./middleware/helmetMiddleware.js');
 const apiRoutes = require('./routes/api.js');
 const appRoutes = require('./routes/app.js');
 const fccTestingRoutes = require('./routes/fcctesting.js');
-const runner = require('./test-runner');
 const notFoundMiddleware = require('./middleware/notFoundMiddleware.js');
 const startApp = require('./startup/startApp.js');
 
