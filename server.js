@@ -1,58 +1,20 @@
 'use strict';
 require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
+const setupExpress = require('./middleware/setupExpress.js');
+const helmetMiddleware = require('./middleware/helmetMiddleware.js');
 const apiRoutes = require('./routes/api.js');
 const appRoutes = require('./routes/app.js');
 const fccTestingRoutes = require('./routes/fcctesting.js');
 const runner = require('./test-runner');
-const helmet = require('helmet');
+const notFoundMiddleware = require('./middleware/notFoundMiddleware.js');
 
-const app = express();
+const app = setupExpress();
 
-app.use(
-  helmet.frameguard({
-    action: 'sameorigin',
-  })
-);
-
-app.use(
-  helmet.dnsPrefetchControl({
-    allow: false,
-  })
-);
-
-app.use(
-  helmet.referrerPolicy({
-    policy: ['same-origin'],
-  })
-);
-
-app.use('/public', express.static(process.cwd() + '/public'));
-
-app.use(
-  cors({ 
-    origin: '*' 
-  })
-);
-
-app.use(
-  bodyParser.urlencoded({ 
-    extended: true 
-  })
-);
-
+helmetMiddleware(app);
 fccTestingRoutes(app);
 apiRoutes(app);
 appRoutes(app);
-
-app.use((req, res, next) => {
-  res.status(404)
-    .type('text')
-    .send('Not Found');
-});
+notFoundMiddleware(app);
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port);
