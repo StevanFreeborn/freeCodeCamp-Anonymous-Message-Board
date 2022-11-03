@@ -6,8 +6,32 @@ const server = require('../server');
 chai.use(chaiHttp);
 
 suite('Functional Tests', function () {
-    test('Can create a new thread', done => {
 
+    const testBoardName = 'test';
+    const testThreadText = 'this is a thread';
+    const testPassword = 'password';
+
+    test('Can create a new thread', done => {
+        chai.request(server)
+        .post(`/api/threads/${testBoardName}`)
+        .type('form')
+        .send({
+            text: testThreadText,
+            delete_password: testPassword,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 200);
+            assert.isObject(res.body);
+            assert.property(res.body, '_id');
+            assert.property(res.body, 'text');
+            assert.property(res.body, 'created_on');
+            assert.property(res.body, 'bumped_on');
+            assert.equal(res.body.created_on, res.body.bumped_on);
+            assert.property(res.body, 'delete_password');
+            assert.property(res.body, 'replies');
+        });
     });
 
     test('Can view 10 most recent threads with 3 replies each', done => {
