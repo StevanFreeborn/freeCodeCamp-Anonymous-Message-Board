@@ -22,15 +22,15 @@ suite('Functional Tests', function () {
         .end((err, res) => {
             if (err) console.log(err);
 
-            assert.equal(res.status, 200);
-            assert.isObject(res.body);
-            assert.property(res.body, '_id');
-            assert.property(res.body, 'text');
-            assert.property(res.body, 'created_on');
-            assert.property(res.body, 'bumped_on');
-            assert.equal(res.body.created_on, res.body.bumped_on);
-            assert.property(res.body, 'delete_password');
-            assert.property(res.body, 'replies');
+            assert.equal(res.status, 201);
+            assert.isObject(res.body, message='body is not an object.');
+            assert.property(res.body, '_id', message='response does not contain an _id property');
+            assert.property(res.body, 'text', message='response does not contain a text property');
+            assert.property(res.body, 'created_on', message='response does not contain a create_on property');
+            assert.property(res.body, 'bumped_on', message='response does not contain a bumped_on property');
+            assert.equal(res.body.created_on, res.body.bumped_on, message='responses bumped_on and created_on property are not the same');
+            assert.property(res.body, 'delete_password', message='response does not contain a delete_password property');
+            assert.property(res.body, 'replies', message='response does not contain a replies property');
         });
     });
 
