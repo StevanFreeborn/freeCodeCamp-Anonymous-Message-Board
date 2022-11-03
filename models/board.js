@@ -5,8 +5,8 @@ const boardSchemaOptions = {
 }
 
 const BoardSchema = mongoose.Schema({
-    id: { type: mongoose.Types.ObjectId },
-    name: { type: String, trim: true, }
+    name: { type: String, trim: true, },
+    threads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'threads', }],
 }, boardSchemaOptions);
 
 const Board = mongoose.model('boards', BoardSchema);
