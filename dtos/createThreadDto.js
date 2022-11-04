@@ -1,5 +1,6 @@
-export default class ThreadDto {
+export default class CreateThreadDto {
     constructor(thread) {
+        this.board = thread.board;
         this._id = thread._id;
         this.text = thread.text;
         this.created_on = thread.created_on;

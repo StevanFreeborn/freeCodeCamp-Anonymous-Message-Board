@@ -1,10 +1,11 @@
 import BoardService from '../../services/boardService.js';
 import HashService from '../../services/hashService.js';
 import ThreadService from '../../services/threadService.js';
-import ThreadDto from '../../dtos/threadDto.js';
+import CreateThreadDto from '../../dtos/createThreadDto.js';
 
 const boardService = new BoardService();
 const threadService = new ThreadService();
+
 export default class ThreadController {
     getThreadsByBoardName = async (req, res) => {
         return res.status(500).json({ message: 'not implemented' });
@@ -23,12 +24,12 @@ export default class ThreadController {
         const hash = await HashService.hash(delete_password);
 
         const thread = await threadService.createThread(board.id, text, hash);
-
+        
         board.threads.push(thread.id)
         await board.save();
 
-        const threadDto = new ThreadDto(thread);
+        const createThreadDto = new CreateThreadDto(thread);
 
-        return res.status(201).json(threadDto);
+        return res.status(201).json(createThreadDto);
     }
 }
