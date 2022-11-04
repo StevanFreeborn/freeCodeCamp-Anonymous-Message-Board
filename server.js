@@ -7,10 +7,12 @@ const appRoutes = require('./routes/app.js');
 const fccTestingRoutes = require('./routes/fcctesting.js');
 const notFoundMiddleware = require('./middleware/notFoundMiddleware.js');
 const startApp = require('./startup/startApp.js');
+const loggingMiddleware = require('./middleware/loggingMiddleware.js');
 
 const app = setupExpress();
 
 helmetMiddleware(app);
+loggingMiddleware(app);
 fccTestingRoutes(app);
 apiRoutes(app);
 appRoutes(app);
