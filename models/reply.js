@@ -8,9 +8,9 @@ const replySchemaOptions = {
 }
 
 const ReplySchema = mongoose.Schema({
-    thread: { type: mongoose.Schema.Types.ObjectId, ref: 'threads' },
-    text: { type: String, trim: true },
-    delete_password: { type: String, trim: true },
+    thread: { type: mongoose.Schema.Types.ObjectId, ref: 'threads', required: true, },
+    text: { type: String, trim: true, required: true, },
+    delete_password: { type: String, trim: true, required: true, },
     reported: { type: Boolean, default: false, },
 }, replySchemaOptions);
 

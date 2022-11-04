@@ -8,7 +8,7 @@ const boardSchemaOptions = {
 }
 
 const BoardSchema = mongoose.Schema({
-    name: { type: String, trim: true, },
+    name: { type: String, trim: true, required: true, },
     threads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'threads', }],
 }, boardSchemaOptions);
 
