@@ -1,6 +1,10 @@
 import BoardService from '../../services/boardService.js';
-const boardService = new BoardService();
+import HashService from '../../services/hashService.js';
+import ThreadService from '../../services/threadService.js';
+import ThreadDto from '../../dtos/threadDto.js';
 
+const boardService = new BoardService();
+const threadService = new ThreadService();
 export default class ThreadController {
     createThread = async (req, res) => {
         const boardName = req.params.board;
@@ -12,8 +16,15 @@ export default class ThreadController {
             board = await boardService.createBoard(boardName);
         }
 
-        
+        const hash = await HashService.hash(delete_password);
 
-        return res.status(201).json({ text, delete_password, });
+        const thread = await threadService.createThread(board.id, text, hash);
+
+        board.threads.push(thread.id)
+        await board.save();
+
+        const threadDto = new ThreadDto(thread);
+
+        return res.status(201).json(threadDto);
     }
 }
