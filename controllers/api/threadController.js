@@ -4,11 +4,11 @@ import ThreadService from '../../services/threadService.js';
 import CreateThreadDto from '../../dtos/createThreadDto.js';
 
 export default class ThreadController {
-    getThreadsByBoardName = async (req, res) => {
+    static getThreadsByBoardName = async (req, res) => {
         return res.status(500).json({ message: 'not implemented' });
     }
 
-    createThread = async (req, res) => {
+    static createThread = async (req, res) => {
         const boardName = req.params.board;
         const { text, delete_password, } = req.body;
 
