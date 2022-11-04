@@ -1,13 +1,11 @@
-var analyser = require('./assertion-analyser.js');
-var EventEmitter = require('events').EventEmitter;
-
-var Mocha = require('mocha'),
-  fs = require('fs'),
-  path = require('path');
+import analyser from './assertion-analyser.js'
+import EventEmitter from 'events';
+import Mocha from 'mocha';
+import fs from 'fs';
+import path from 'path';
 
 var mocha = new Mocha();
 var testDir = './tests'
-
 
 // Add each .js file to the mocha instance
 fs.readdirSync(testDir).filter(function (file) {
@@ -59,7 +57,7 @@ emitter.run = function () {
   }
 };
 
-module.exports = emitter;
+export default emitter;
 
 /*
  * Mocha.runner Events:

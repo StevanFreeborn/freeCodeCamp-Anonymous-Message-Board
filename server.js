@@ -1,13 +1,14 @@
-'use strict';
-require('dotenv').config();
-const setupExpress = require('./startup/setupExpress.js');
-const helmetMiddleware = require('./middleware/helmetMiddleware.js');
-const apiRoutes = require('./routes/api.js');
-const appRoutes = require('./routes/app.js');
-const fccTestingRoutes = require('./routes/fcctesting.js');
-const notFoundMiddleware = require('./middleware/notFoundMiddleware.js');
-const startApp = require('./startup/startApp.js');
-const loggingMiddleware = require('./middleware/loggingMiddleware.js');
+import dotevn from 'dotenv';
+import setupExpress from './startup/setupExpress.js';
+import helmetMiddleware from './middleware/helmetMiddleware.js';
+import apiRoutes from './routes/api.js';
+import appRoutes from './routes/app.js';
+import fccTestingRoutes from './routes/fcctesting.js';
+import notFoundMiddleware from './middleware/notFoundMiddleware.js';
+import startApp from './startup/startApp.js';
+import loggingMiddleware from './middleware/loggingMiddleware.js';
+
+dotevn.config();
 
 const app = setupExpress();
 
@@ -19,4 +20,4 @@ appRoutes(app);
 notFoundMiddleware(app);
 startApp(app);
 
-module.exports = app;
+export default app;

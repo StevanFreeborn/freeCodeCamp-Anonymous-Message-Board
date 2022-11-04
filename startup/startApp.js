@@ -1,7 +1,7 @@
-const connectDb = require('../database/connectDb.js');
-const runner = require('../test-runner.js');
+import connectDb from '../database/connectDb.js';
+import runner from '../test-runner.js';
 
-module.exports = function (app) {
+export default function (app) {
     const dbConnected = connectDb();
 
     const listener = app.listen(process.env.PORT || 3000, () => {

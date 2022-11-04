@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const replySchemaOptions = {
     timestamps: {
@@ -16,4 +16,4 @@ const ReplySchema = mongoose.Schema({
 
 const Reply = mongoose.model('replies', ReplySchema);
 
-module.exports = Reply;
+export default Reply;

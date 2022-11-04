@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const boardSchemaOptions = {
     timestamps: {
@@ -14,4 +14,4 @@ const BoardSchema = mongoose.Schema({
 
 const Board = mongoose.model('boards', BoardSchema);
 
-module.exports = Board;
+export default Board;

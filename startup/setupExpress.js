@@ -1,8 +1,8 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 
-module.exports = function () {
+export default function () {
     const app = express();
     app.use('/public', express.static(process.cwd() + '/public'));
     app.use(cors({ origin: '*' }));

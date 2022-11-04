@@ -1,7 +1,7 @@
-const BoardService = require('../../services/boardService.js');
+import BoardService from '../../services/boardService.js';
 const boardService = new BoardService();
 
-class ThreadController {
+export default class ThreadController {
     createThread = async (req, res) => {
         const boardName = req.params.board;
         const { text, delete_password, } = req.body;
@@ -17,5 +17,3 @@ class ThreadController {
         return res.status(201).json({ text, delete_password, });
     }
 }
-
-module.exports = ThreadController;

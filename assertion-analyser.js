@@ -61,7 +61,7 @@ function splitter(str) {
   return args;
 }
 
-function assertionAnalyser(body) {
+export default function assertionAnalyser(body) {
 
   // already filtered in the test runner
   // // remove comments
@@ -100,5 +100,3 @@ function assertionAnalyser(body) {
   })
   return assertions;
 }
-
-module.exports = assertionAnalyser;

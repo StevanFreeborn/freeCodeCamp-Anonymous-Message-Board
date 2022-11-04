@@ -2,6 +2,7 @@
 	"name": "freecodecamp-anonymous-message-board",
 	"version": "1.0.0",
 	"description": "An anonymous message board built as part of the freeCodeCamp Information Security certification.",
+	"type": "module",
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js",

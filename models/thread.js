@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const threadSchemaOptions = {
     timestamps: {
@@ -17,4 +17,4 @@ const ThreadSchema = mongoose.Schema({
 
 const Thread = mongoose.model('threads', ThreadSchema);
 
-module.exports = Thread;
+export default Thread;

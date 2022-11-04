@@ -1,6 +1,6 @@
-const Board = require('../models/board.js');
+import Board from '../models/board.js';
 
-class BoardService {
+export default class BoardService {
     getBoardByName = async (boardName) => {
         return await Board.findOne({ name: boardName }).exec();
     }
@@ -9,5 +9,3 @@ class BoardService {
         return await new Board({ name: boardName }).save();
     }
 }
-
-module.exports = BoardService;
