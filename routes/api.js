@@ -3,6 +3,6 @@ const threadController = new ThreadController();
 
 export default function (app) {
   app.post('/api/threads/:board', threadController.createThread);
-  app.get('/api/threads/:board');
+  app.get('/api/threads/:board', threadController.getThreadsByBoardName);
   app.get('/api/replies/:board');
 };

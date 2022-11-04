@@ -29,21 +29,57 @@ suite('Functional Tests', function () {
         .end((err, res) => {
             if (err) console.log(err);
 
-            assert.equal(res.status, 201);
-            assert.isObject(res.body, 'body is not an object.');
-            assert.property(res.body, '_id','response does not contain an _id property');
-            assert.property(res.body, 'text', 'response does not contain a text property');
-            assert.property(res.body, 'created_on', 'response does not contain a create_on property');
-            assert.property(res.body, 'bumped_on', 'response does not contain a bumped_on property');
+            assert.equal(res.status, 201, 'status code is not 201');
+            assert.isObject(res.body, 'body is not an object');
+            assert.property(res.body, '_id','response does not have _id property');
+            assert.property(res.body, 'text', 'response does not have text property');
+            assert.property(res.body, 'created_on', 'response does not have created_on property');
+            assert.property(res.body, 'bumped_on', 'response does not have bumped_on property');
             assert.equal(res.body.created_on, res.body.bumped_on, 'responses bumped_on and created_on property are not the same');
-            assert.property(res.body, 'delete_password', 'response does not contain a delete_password property');
-            assert.property(res.body, 'replies', 'response does not contain a replies property');
+            assert.property(res.body, 'delete_password', 'response does not have delete_password property');
+            assert.property(res.body, 'reported', 'response does not have reported property');
+            assert.property(res.body, 'replies', 'response does not have replies property');
             done();
         });
     });
 
     test('Can view 10 most recent threads with 3 replies each', done => {
-        assert.fail();
+        // TODO: Create 11 threads with 5 replies each as fake setup data.
+
+        chai.request(server)
+        .get(`/api/threads/${testBoardName}`)
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 200);
+
+            const threads = res.body;
+
+            assert.isArray(threads, 'body is not an array');
+            assert.isAtMost(threads.length, 10, 'more than 10 threads returned');
+            
+            threads.forEach(thread => {
+                assert.isObject(thread, 'thread is not an object');
+                assert.property(thread, '_id', 'thread does not have _id property');
+                assert.property(thread, 'text', 'thread does not have text property');
+                assert.property(thread, 'created_on', 'thread does not have created_on property');
+                assert.property(thread, 'bumped_on', 'thread does not have bumped_on property');
+                assert.notProperty(thread, 'reported', 'thread does have reported property');
+                assert.notProperty(thread, 'delete_password', 'thread does have delete_password property');
+                assert.property(thread, 'replies', 'response does not have replies property');
+
+                const replies = thread.replies;
+
+                assert.isArray(replies, 'replies is not an array');
+                assert.isAtMost(replies.length, 3, 'more than 3 replies returned');
+
+                replies.forEach(reply => {
+                    assert.property(reply, 'text', 'reply does not have text property');
+                    assert.notProperty(reply, 'reported', 'reply does have reported property');
+                    assert.notProperty(reply, 'delete_password', 'reply does have delete_password property');
+                });
+            });
+        });
     });
 
     test('Can not delete a thread with incorrect password', done => {
