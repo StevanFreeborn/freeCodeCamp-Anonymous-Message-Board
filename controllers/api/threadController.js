@@ -17,7 +17,7 @@ export default class ThreadController {
         if (board == null) {
             board = await BoardService.createBoard(boardName);
         }
-
+        
         const hash = await HashService.hash(delete_password);
 
         const thread = await ThreadService.createThread(board.id, text, hash);

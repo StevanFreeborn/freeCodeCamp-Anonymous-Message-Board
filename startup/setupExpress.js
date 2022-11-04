@@ -7,6 +7,7 @@ export default function () {
     app.use('/public', express.static(process.cwd() + '/public'));
     app.use(cors({ origin: '*' }));
     app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
 
     return app;
 }
