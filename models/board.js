@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const boardSchemaOptions = {
-    timestamps: true,
+    timestamps: {
+        createdAt: 'created_on',
+        updatedAt: 'bumped_on',
+    },
 }
 
 const BoardSchema = mongoose.Schema({

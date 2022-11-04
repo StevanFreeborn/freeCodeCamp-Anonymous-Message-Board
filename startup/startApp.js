@@ -1,9 +1,13 @@
-const runner = require('../test-runner');
+const connectDb = require('../database/connectDb.js');
+const runner = require('../test-runner.js');
 
 module.exports = function (app) {
+    const dbConnected = connectDb();
+
     const listener = app.listen(process.env.PORT || 3000, () => {
         console.log('Your app is listening on port ' + listener.address().port);
-        if (process.env.NODE_ENV === 'test') {
+        
+        if (process.env.NODE_ENV === 'test' && dbConnected) {
             console.log('Running Tests...');
             setTimeout(() => {
                 try {
