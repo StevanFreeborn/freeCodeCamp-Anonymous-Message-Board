@@ -1,11 +1,21 @@
 import BoardService from '../../services/boardService.js';
 import HashService from '../../services/hashService.js';
 import ThreadService from '../../services/threadService.js';
-import CreateThreadDto from '../../dtos/createThreadDto.js';
+import ThreadDto from '../../dtos/threadDto.js';
 
 export default class ThreadController {
     static getThreadsByBoardName = async (req, res) => {
-        return res.status(500).json({ message: 'not implemented' });
+        const boardName = req.params.board;
+        const board = await BoardService.getBoardByName(boardName);
+
+        if (board == null) {
+            return res.status(404).json({ error: `No board with name ${boardName} found`});
+        }
+
+        const threads = await ThreadService.getThreadsByBoardId(board.id);
+        const threadDtos = threads.map(thread => new ThreadDto(thread));
+
+        return res.status(200).json(threadDtos);
     }
 
     static createThread = async (req, res) => {
@@ -25,8 +35,8 @@ export default class ThreadController {
         board.threads.push(thread.id)
         await board.save();
 
-        const createThreadDto = new CreateThreadDto(thread);
+        const threadDto = new ThreadDto(thread);
 
-        return res.status(201).json(createThreadDto);
+        return res.status(201).json(threadDto);
     }
 }

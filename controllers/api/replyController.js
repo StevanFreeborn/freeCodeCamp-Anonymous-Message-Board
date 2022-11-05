@@ -1,7 +1,7 @@
 import ThreadService from "../../services/threadService.js";
 import HashService from "../../services/hashService.js";
 import ReplyService from "../../services/replyService.js";
-import CreateReplyDto from "../../dtos/createReplyDto.js";
+import ReplyDto from "../../dtos/replyDto.js";
 
 export default class ReplyController {
     static createReply = async (req, res) => {
@@ -20,8 +20,8 @@ export default class ReplyController {
         thread.replies.push(reply.id);
         await thread.save();
 
-        const createReplyDto = new CreateReplyDto(reply);
+        const replyDto = new ReplyDto(reply);
 
-        return res.status(201).json(createReplyDto);
+        return res.status(201).json(replyDto);
     }
 }

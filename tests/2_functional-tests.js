@@ -8,12 +8,6 @@ import Reply from '../models/reply.js';
 chai.use(chaiHttp);
 
 suite('Functional Tests', function () {
-    after(async () => {
-        await Board.deleteMany({}).exec();
-        await Thread.deleteMany({}).exec();
-        await Reply.deleteMany({}).exec();
-    });
-
     const testBoardName = 'test';
     const testThreadText = 'this is a thread';
     const testPassword = 'password';
@@ -33,7 +27,7 @@ suite('Functional Tests', function () {
                 delete_password: testPassword,
              }).save();
     
-            for (let j = 0; j < numOfReplies; i++) {
+            for (let j = 0; j < numOfReplies; j++) {
                 await new Reply({
                     thread: thread.id,
                     text: testReplyText,
@@ -41,7 +35,20 @@ suite('Functional Tests', function () {
                 }).save();
             }
         }
+
+        return true;
     }
+
+    before(async function() {
+        this.timeout(10000);
+        await createTestData();
+    });
+
+    after(async () => {
+        await Board.deleteMany({}).exec();
+        await Thread.deleteMany({}).exec();
+        await Reply.deleteMany({}).exec();
+    });
 
     test('Can create a new thread', done => {
         chai.request(server)
@@ -62,8 +69,6 @@ suite('Functional Tests', function () {
             assert.property(res.body, 'created_on', 'response does not have created_on property');
             assert.property(res.body, 'bumped_on', 'response does not have bumped_on property');
             assert.equal(res.body.created_on, res.body.bumped_on, 'responses bumped_on and created_on property are not the same');
-            assert.property(res.body, 'delete_password', 'response does not have delete_password property');
-            assert.property(res.body, 'reported', 'response does not have reported property');
             assert.property(res.body, 'replies', 'response does not have replies property');
             done();
         });
@@ -100,16 +105,12 @@ suite('Functional Tests', function () {
                 assert.property(res.body, 'text', 'response does not have text property');
                 assert.property(res.body, 'created_on', 'response does not have created_on property');
                 assert.property(res.body, 'bumped_on', 'response does not have bumped_on property');
-                assert.equal(res.body.created_on, res.body.bumped_on, 'responses bumped_on and created_on property are not the same');
-                assert.property(res.body, 'delete_password', 'response does not have delete_password property');
-                assert.property(res.body, 'reported', 'response does not have reported property');
                 done();
             });
         });
     });
 
     test('Can view 10 most recent threads with 3 replies each', async (done) => {
-        await createTestData();
 
         chai.request(server)
         .get(`/api/threads/${testBoardName}`)
@@ -129,8 +130,6 @@ suite('Functional Tests', function () {
                 assert.property(thread, 'text', 'thread does not have text property');
                 assert.property(thread, 'created_on', 'thread does not have created_on property');
                 assert.property(thread, 'bumped_on', 'thread does not have bumped_on property');
-                assert.notProperty(thread, 'reported', 'thread does have reported property');
-                assert.notProperty(thread, 'delete_password', 'thread does have delete_password property');
                 assert.property(thread, 'replies', 'response does not have replies property');
 
                 const replies = thread.replies;
@@ -139,9 +138,11 @@ suite('Functional Tests', function () {
                 assert.isAtMost(replies.length, 3, 'more than 3 replies returned');
 
                 replies.forEach(reply => {
-                    assert.property(reply, 'text', 'reply does not have text property');
-                    assert.notProperty(reply, 'reported', 'reply does have reported property');
-                    assert.notProperty(reply, 'delete_password', 'reply does have delete_password property');
+                    assert.property(reply, 'thread', 'response does not have thread property');
+                    assert.property(reply, '_id','response does not have _id property');
+                    assert.property(reply, 'text', 'response does not have text property');
+                    assert.property(reply, 'created_on', 'response does not have created_on property');
+                    assert.property(reply, 'bumped_on', 'response does not have bumped_on property');
                 });
             });
         });
