@@ -12,6 +12,8 @@ suite('Functional Tests', function () {
     const testThreadText = 'this is a thread';
     const testPassword = 'password';
     const testReplyText = 'this is a reply';
+    let testThreadId;
+    let testReplyId;
 
     const createTestData = async () => {
         const board = await new Board({ name: 'fakeBoard' }).save();
@@ -21,18 +23,22 @@ suite('Functional Tests', function () {
         for (let i = 0; i < numOfThreads; i++) {
             const numOfReplies = 5
     
-            const thread = await new Thread({ 
+            const thread = await new Thread({
                 board: board.id,
                 text: testThreadText,
                 delete_password: testPassword,
-             }).save();
+            }).save();
+
+            testThreadId = thread.id;
     
             for (let j = 0; j < numOfReplies; j++) {
-                await new Reply({
+                const reply = await new Reply({
                     thread: thread.id,
                     text: testReplyText,
                     delete_password: testPassword,
                 }).save();
+
+                testReplyId = reply.id;
             }
         }
 
@@ -110,8 +116,7 @@ suite('Functional Tests', function () {
         });
     });
 
-    test('Can view 10 most recent threads with 3 replies each', async (done) => {
-
+    test('Can view 10 most recent threads with 3 replies each', done => {
         chai.request(server)
         .get(`/api/threads/${testBoardName}`)
         .end((err, res) => {
@@ -145,9 +150,43 @@ suite('Functional Tests', function () {
                     assert.property(reply, 'bumped_on', 'response does not have bumped_on property');
                 });
             });
-        });
 
-        done();
+            done();
+        });
+    });
+
+    test('Can view a thread and all its replies', done => {
+        chai.request(server)
+        .get(`/api/replies/${testBoardName}?thread_id=${testThreadId}`)
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 200);
+
+            const thread = res.body;
+
+            assert.isObject(thread, 'body is not an object');         
+            assert.isObject(thread, 'thread is not an object');
+            assert.property(thread, '_id', 'thread does not have _id property');
+            assert.property(thread, 'text', 'thread does not have text property');
+            assert.property(thread, 'created_on', 'thread does not have created_on property');
+            assert.property(thread, 'bumped_on', 'thread does not have bumped_on property');
+            assert.property(thread, 'replies', 'response does not have replies property');
+            
+            const replies = thread.replies;
+
+            assert.isArray(replies, 'replies is not an array');
+
+            replies.forEach(reply => {
+                assert.property(reply, 'thread', 'response does not have thread property');
+                assert.property(reply, '_id','response does not have _id property');
+                assert.property(reply, 'text', 'response does not have text property');
+                assert.property(reply, 'created_on', 'response does not have created_on property');
+                assert.property(reply, 'bumped_on', 'response does not have bumped_on property');
+            });
+
+            done();
+        });
     });
 
     test('Can not delete a thread with incorrect password', done => {
@@ -159,10 +198,6 @@ suite('Functional Tests', function () {
     });
 
     test('Can report a thread', done => {
-        assert.fail();
-    });
-
-    test('Can view a thread and all its replies', done => {
         assert.fail();
     });
 

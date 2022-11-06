@@ -7,6 +7,6 @@ export default function (app) {
   app.post('/api/threads/:board', ThreadController.createThread);
   
   // Replies
-  app.get('/api/replies/:board');
+  app.get('/api/replies/:board', ReplyController.getRepliesByThreadId);
   app.post('/api/replies/:board', ReplyController.createReply);
 };

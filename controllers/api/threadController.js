@@ -9,7 +9,7 @@ export default class ThreadController {
         const board = await BoardService.getBoardByName(boardName);
 
         if (board == null) {
-            return res.status(404).json({ error: `No board with name ${boardName} found`});
+            return res.status(404).json({ error: `No board with name ${boardName} found`, });
         }
 
         const threads = await ThreadService.getThreadsByBoardId(board.id);
@@ -21,7 +21,6 @@ export default class ThreadController {
     static createThread = async (req, res) => {
         const boardName = req.params.board;
         const { text, delete_password, } = req.body;
-
         let board = await BoardService.getBoardByName(boardName);
 
         if (board == null) {
@@ -29,7 +28,6 @@ export default class ThreadController {
         }
         
         const hash = await HashService.hash(delete_password);
-
         const thread = await ThreadService.createThread(board.id, text, hash);
         
         board.threads.push(thread.id)
