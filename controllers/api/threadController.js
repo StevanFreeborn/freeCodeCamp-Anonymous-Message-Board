@@ -37,4 +37,18 @@ export default class ThreadController {
 
         return res.status(201).json(threadDto);
     }
+
+    static reportThread = async (req, res) => {
+        const { thread_id } = req.body;
+        const thread = await ThreadService.getThreadById(thread_id);
+
+        if (thread == null) {
+            return res.status(400).json({ error: `Thread with id ${thread_id} not found` });
+        }
+
+        thread.reported = true;
+        await thread.save();
+
+        return res.status(200).json({ result: `Thread ${thread.id} has been reported.` });
+    }
 }

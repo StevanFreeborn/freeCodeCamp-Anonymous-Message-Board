@@ -14,6 +14,7 @@ suite('Functional Tests', function () {
     const testReplyText = 'this is a reply';
     let testThreadId;
     let testReplyId;
+    const testIncorrectPassword = 'incorrect';
 
     const createTestData = async () => {
         const board = await new Board({ name: 'fakeBoard' }).save();
@@ -189,27 +190,104 @@ suite('Functional Tests', function () {
         });
     });
 
-    test('Can not delete a thread with incorrect password', done => {
-        assert.fail();
-    });
-
-    test('Can delete a thread with correct password', done => {
-        assert.fail();
-    });
-
     test('Can report a thread', done => {
-        assert.fail();
-    });
+        chai.request(server)
+        .put(`/api/threads/${testBoardName}`)
+        .type('form')
+        .send({
+            thread_id: testThreadId,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
 
-    test('Can not delete a reply with inccorect password', done => {
-        assert.fail();
-    });
-
-    test('Can delete a reply with correct password', done => {
-        assert.fail();
+            assert.equal(res.status, 200);
+            done();
+        });
     });
 
     test('Can report a reply', done => {
-        assert.fail();
+        chai.request(server)
+        .put(`/api/replies/${testBoardName}`)
+        .type('form')
+        .send({
+            thread_id: testThreadId,
+            reply_id: testReplyId,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 200);
+            done();
+        });
+    });
+
+    test('Can not delete a reply with inccorect password', done => {
+        chai.request(server)
+        .delete(`/api/replies/${testBoardName}`)
+        .type('form')
+        .send({
+            thread_id: testThreadId,
+            reply_id: testReplyId,
+            delete_password: testIncorrectPassword,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 400);
+            assert.equal(res.body, 'incorrect password');
+            done();
+        });
+    });
+
+    test('Can delete a reply with correct password', done => {
+        chai.request(server)
+        .delete(`/api/replies/${testBoardName}`)
+        .type('form')
+        .send({
+            thread_id: testThreadId,
+            reply_id: testReplyId,
+            delete_password: testPassword,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 204);
+            assert.equal(res.body, 'success');
+            done();
+        });
+    });
+
+    test('Can not delete a thread with incorrect password', done => {
+        chai.request(server)
+        .delete(`/api/threads/${testBoardName}`)
+        .type('form')
+        .send({
+            thread_id: testThreadId,
+            delete_password: testIncorrectPassword,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 400);
+            assert.equal(res.body, 'incorrect password');
+            done();
+        });
+    });
+
+    test('Can delete a thread with correct password', done => {
+        chai.request(server)
+        .delete(`/api/threads/${testBoardName}`)
+        .type('form')
+        .send({
+            thread_id: testThreadId,
+            delete_password: testPassword,
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 204);
+            assert.equal(res.body, 'success');
+            done();
+        });
     });
 });

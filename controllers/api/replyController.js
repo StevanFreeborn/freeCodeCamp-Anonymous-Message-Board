@@ -36,4 +36,18 @@ export default class ReplyController {
 
         return res.status(201).json(replyDto);
     }
+
+    static reportReply = async (req, res) => {
+        const { reply_id } = req.body;
+        const reply = await ReplyService.getReplyById(reply_id);
+
+        if (reply == null) {
+            return res.status(400).json({ error: `Reply with id ${reply_id} not found` });
+        }
+
+        reply.reported = true;
+        await reply.save();
+
+        return res.status(200).json({ result: `Reply ${reply.id} has been reported.` });
+    }
 }
