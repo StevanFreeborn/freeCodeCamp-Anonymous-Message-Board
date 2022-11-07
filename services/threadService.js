@@ -35,4 +35,8 @@ export default class ThreadService {
             delete_password: hashedPassword,
         }).save();
     }
+
+    static deleteThreadById = async (threadId) => {
+        return await Thread.deleteOne({ id: threadId, }).exec();
+    }
 }

@@ -4,6 +4,7 @@ import server from '../server.js';
 import Board from '../models/board.js';
 import Thread from '../models/thread.js';
 import Reply from '../models/reply.js';
+import HashService from '../services/hashService.js';
 
 chai.use(chaiHttp);
 
@@ -15,9 +16,11 @@ suite('Functional Tests', function () {
     let testThreadId;
     let testReplyId;
     const testIncorrectPassword = 'incorrect';
+    const fakeBoardName = 'fakeBoard'
 
     const createTestData = async () => {
-        const board = await new Board({ name: 'fakeBoard' }).save();
+        const board = await new Board({ name: fakeBoardName }).save();
+        const hash = await HashService.hash(testPassword);
 
         const numOfThreads = 11;
     
@@ -27,7 +30,7 @@ suite('Functional Tests', function () {
             const thread = await new Thread({
                 board: board.id,
                 text: testThreadText,
-                delete_password: testPassword,
+                delete_password: hash,
             }).save();
 
             testThreadId = thread.id;
@@ -36,8 +39,11 @@ suite('Functional Tests', function () {
                 const reply = await new Reply({
                     thread: thread.id,
                     text: testReplyText,
-                    delete_password: testPassword,
+                    delete_password: hash,
                 }).save();
+
+                thread.replies.push(reply.id);
+                thread.save();
 
                 testReplyId = reply.id;
             }
@@ -119,7 +125,7 @@ suite('Functional Tests', function () {
 
     test('Can view 10 most recent threads with 3 replies each', done => {
         chai.request(server)
-        .get(`/api/threads/${testBoardName}`)
+        .get(`/api/threads/${fakeBoardName}`)
         .end((err, res) => {
             if (err) console.log(err);
 
@@ -158,7 +164,7 @@ suite('Functional Tests', function () {
 
     test('Can view a thread and all its replies', done => {
         chai.request(server)
-        .get(`/api/replies/${testBoardName}?thread_id=${testThreadId}`)
+        .get(`/api/replies/${fakeBoardName}?thread_id=${testThreadId}`)
         .end((err, res) => {
             if (err) console.log(err);
 
@@ -192,7 +198,7 @@ suite('Functional Tests', function () {
 
     test('Can report a thread', done => {
         chai.request(server)
-        .put(`/api/threads/${testBoardName}`)
+        .put(`/api/threads/${fakeBoardName}`)
         .type('form')
         .send({
             thread_id: testThreadId,
@@ -200,14 +206,15 @@ suite('Functional Tests', function () {
         .end((err, res) => {
             if (err) console.log(err);
 
-            assert.equal(res.status, 200);
+            assert.equal(res.status, 200, 'response status is not 200');
+            assert.equal(res.text, 'reported', 'response does not contain the text reported');
             done();
         });
     });
 
     test('Can report a reply', done => {
         chai.request(server)
-        .put(`/api/replies/${testBoardName}`)
+        .put(`/api/replies/${fakeBoardName}`)
         .type('form')
         .send({
             thread_id: testThreadId,
@@ -216,14 +223,15 @@ suite('Functional Tests', function () {
         .end((err, res) => {
             if (err) console.log(err);
 
-            assert.equal(res.status, 200);
+            assert.equal(res.status, 200, 'response status is not 200');
+            assert.equal(res.text, 'reported', 'response does not contain the text reported');
             done();
         });
     });
 
     test('Can not delete a reply with inccorect password', done => {
         chai.request(server)
-        .delete(`/api/replies/${testBoardName}`)
+        .delete(`/api/replies/${fakeBoardName}`)
         .type('form')
         .send({
             thread_id: testThreadId,
@@ -233,15 +241,15 @@ suite('Functional Tests', function () {
         .end((err, res) => {
             if (err) console.log(err);
 
-            assert.equal(res.status, 400);
-            assert.equal(res.body, 'incorrect password');
+            assert.equal(res.status, 400, 'response status is not 400');
+            assert.equal(res.text, 'incorrect password', 'response does not contain incorrect password text');
             done();
         });
     });
 
     test('Can delete a reply with correct password', done => {
         chai.request(server)
-        .delete(`/api/replies/${testBoardName}`)
+        .delete(`/api/replies/${fakeBoardName}`)
         .type('form')
         .send({
             thread_id: testThreadId,
@@ -250,16 +258,16 @@ suite('Functional Tests', function () {
         })
         .end((err, res) => {
             if (err) console.log(err);
-
-            assert.equal(res.status, 204);
-            assert.equal(res.body, 'success');
+            
+            assert.equal(res.status, 200, 'response status is not 200');
+            assert.equal(res.text, 'success', 'response does not contain text success');
             done();
         });
     });
 
     test('Can not delete a thread with incorrect password', done => {
         chai.request(server)
-        .delete(`/api/threads/${testBoardName}`)
+        .delete(`/api/threads/${fakeBoardName}`)
         .type('form')
         .send({
             thread_id: testThreadId,
@@ -269,14 +277,14 @@ suite('Functional Tests', function () {
             if (err) console.log(err);
 
             assert.equal(res.status, 400);
-            assert.equal(res.body, 'incorrect password');
+            assert.equal(res.text, 'incorrect password');
             done();
         });
     });
 
     test('Can delete a thread with correct password', done => {
         chai.request(server)
-        .delete(`/api/threads/${testBoardName}`)
+        .delete(`/api/threads/${fakeBoardName}`)
         .type('form')
         .send({
             thread_id: testThreadId,
@@ -284,9 +292,9 @@ suite('Functional Tests', function () {
         })
         .end((err, res) => {
             if (err) console.log(err);
-
-            assert.equal(res.status, 204);
-            assert.equal(res.body, 'success');
+    
+            assert.equal(res.status, 200, 'response status is not 200');
+            assert.equal(res.text, 'success', 'response does not contain text success');
             done();
         });
     });

@@ -12,4 +12,18 @@ export default class ReplyService {
             delete_password: hashedPassword,
         }).save();
     }
+
+    static deleteRepliesByThreadId = async (threadId) => {
+        return await Reply.deleteMany({ thread: threadId }).exec();
+    }
+
+    static deleteReplyById = async (replyId) => {
+        return await Reply
+            .updateOne(
+                { _id: replyId, },
+                { text: '[deleted]' },
+                { runValidators: true }
+            )
+            .exec();
+    }
 }

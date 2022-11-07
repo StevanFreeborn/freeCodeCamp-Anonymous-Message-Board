@@ -12,5 +12,5 @@ export default function (app) {
   app.get('/api/replies/:board', ReplyController.getRepliesByThreadId);
   app.post('/api/replies/:board', ReplyController.createReply);
   app.put('/api/replies/:board', ReplyController.reportReplyById);
-  app.delete('/api/replies/:board');
+  app.delete('/api/replies/:board', ReplyController.deleteReplyById);
 };
