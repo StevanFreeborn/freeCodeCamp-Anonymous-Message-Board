@@ -37,7 +37,7 @@ export default class ReplyController {
         return res.status(201).json(replyDto);
     }
 
-    static reportReply = async (req, res) => {
+    static reportReplyById = async (req, res) => {
         const { reply_id } = req.body;
         const reply = await ReplyService.getReplyById(reply_id);
 
