@@ -63,6 +63,14 @@ suite('Functional Tests', function () {
         await Reply.deleteMany({}).exec();
     });
 
+    test('Can add new board', done => {
+        assert.fail();
+    });
+
+    test('Can view boards', done => {
+
+    });
+
     test('Can create a new thread', done => {
         chai.request(server)
         .post(`/api/threads/${testBoardName}`)

@@ -1,7 +1,12 @@
 import ThreadController from '../controllers/api/threadController.js';
 import ReplyController from '../controllers/api/replyController.js';
+import BoardController from '../controllers/api/boardController.js';
 
 export default function (app) {
+  // Boards
+  app.get('/api/boards', BoardController.getBoards);
+  app.post('/api/boards', BoardController.createBoard);
+  
   // Threads
   app.get('/api/threads/:board', ThreadController.getThreadsByBoardName);
   app.post('/api/threads/:board', ThreadController.createThread);
