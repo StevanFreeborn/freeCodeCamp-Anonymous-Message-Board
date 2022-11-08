@@ -4,7 +4,7 @@ import BoardService from "../../services/boardService.js"
 export default class BoardController {
     static getBoards = async (req, res) => {
         const boards = await BoardService.getBoards();
-        const boardDtos = boards.map(board => new BoardDto)
+        const boardDtos = boards.map(board => new BoardDto(board));
 
         return res.status(200).json(boardDtos);
     }
@@ -20,6 +20,6 @@ export default class BoardController {
         board = await BoardService.createBoard(name);
         const boardDto = new BoardDto(board);
 
-        return res.statu(201).json(boardDto);
+        return res.status(201).json(boardDto);
     }
 }

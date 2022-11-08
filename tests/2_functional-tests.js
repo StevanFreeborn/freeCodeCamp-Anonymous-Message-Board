@@ -64,11 +64,42 @@ suite('Functional Tests', function () {
     });
 
     test('Can add new board', done => {
-        assert.fail();
+        chai.request(server)
+        .post('/api/boards')
+        .type('form')
+        .send({
+            name: 'newBoard',
+        })
+        .end((err, res) => {
+            if (err) console.log(err);
+
+            assert.equal(res.status, 201, 'status code is not 201');
+            assert.isObject(res.body, 'body is not an object');
+            assert.property(res.body, '_id','response does not have _id property');
+            assert.property(res.body, 'name', 'response does not have name property');
+            assert.property(res.body, 'created_on', 'response does not have created_on property');
+            assert.property(res.body, 'bumped_on', 'response does not have bumped_on property');
+            done();
+        });
     });
 
     test('Can view boards', done => {
+        chai.request(server)
+        .get('/api/boards')
+        .end((err, res) => {
+            if (err) console.log(err);
 
+            assert.equal(res.status, 200, 'status code is not 200');
+            assert.isArray(res.body, 'body is not an array');
+            res.body.forEach(board => {
+                assert.property(board, '_id','response does not have _id property');
+                assert.property(board, 'name', 'response does not have name property');
+                assert.property(board, 'created_on', 'response does not have created_on property');
+                assert.property(board, 'bumped_on', 'response does not have bumped_on property');
+            })
+            
+            done();
+        });
     });
 
     test('Can create a new thread', done => {
