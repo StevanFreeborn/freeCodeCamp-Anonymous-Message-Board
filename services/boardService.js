@@ -2,7 +2,10 @@ import Board from '../models/board.js';
 
 export default class BoardService {
     static getBoards = async () => {
-        return await Board.find({}).exec();
+        return await Board
+        .find({})
+        .sort({ bumped_on: 'desc', })
+        .exec();
     }
 
     static getBoardByName = async (boardName) => {
