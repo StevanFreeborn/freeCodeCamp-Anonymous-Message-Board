@@ -9,6 +9,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/styles/style.css">
+    <link 
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
+    >
   </head>
 
   <body class="h-100">
@@ -38,6 +42,30 @@
           </nav>
         </div>
       </header>
+
+      <main>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <form action="/api/threads/test" method="post" id="newThread">
+                <input type='text' placeholder='board' id='board1' name='board' required=''><br>
+                <textarea type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
+                <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
+                <input type="submit" value="Submit">
+              </form>
+            </div>
+            <div class="col-sm-6">
+              <pre>
+                <code id="new-thread-response" class="language-json">
+                  {
+                    "hello": "hello"
+                  }
+                </code>
+              </pre>
+            </div>
+          </div>
+        </div>
+      </main>
   
       <div id='testui' style='margin-left: 5%'>
   
@@ -108,8 +136,6 @@
             <input type="submit" value="Submit">
           </form>
       </div>
-  
-      <hr style='margin: 50px; margin-top: 200px'>
 
       <footer class="container-fluid mt-auto">
         <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top">
@@ -160,6 +186,8 @@
         </div>
       </footer>
     </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
     <script 
       src="https://code.jquery.com/jquery-3.6.1.min.js" 
       integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" 
