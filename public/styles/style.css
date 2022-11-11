@@ -137,6 +137,10 @@ max-width-720 {
   max-width: 720px;
 }
 
+.api-resposne {
+  min-height: 300px;
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);

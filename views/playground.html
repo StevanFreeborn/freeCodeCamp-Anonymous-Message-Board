@@ -9,7 +9,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/public/styles/style.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <link rel="stylesheet" href="/public/styles/solarized-dark.min.css">
 </head>
 
 <body class="h-100">
@@ -55,49 +55,39 @@
                       <div class="form-group mb-3">
                         <label for="add-thread-board" class="form-label">Board Name</label>
                         <input class="form-control" type='text' id='add-thread-board' name='board'>
-                        <div id="add-thread-board-error" class="text-start text-danger fw-bold">hello</div>
+                        <div id="add-thread-board-error" class="text-start text-danger fw-bold"></div>
                       </div>
                       <div class="form-group mb-3">
                         <label for="add-thread-text" class="form-label">Thread Text</label>
                         <textarea class="form-control" type='text' id='add-thread-text' name='text'></textarea>
-                        <div id="add-thread-text-error" class="text-start text-danger fw-bold">hello</div>
+                        <div id="add-thread-text-error" class="text-start text-danger fw-bold"></div>
                       </div>
                       <div class="form-group mb-3">
                         <label for="add-thread-delete-password" class="form-label">Delete Password</label>
                         <input class="form-control" type='password' id="add-thread-delete-password" name='delete_password'>
-                        <div id="add-thread-delete-password-error" class="text-start text-danger fw-bold">hello</div>
+                        <div id="add-thread-delete-password-error" class="text-start text-danger fw-bold"></div>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-3">
                         <button class="btn btn-primary" type="submit">Add Thread</button>
                       </div>
                     </form>
                   </div>
                   <div class="col-sm-6 d-flex flex-column">
                     <h6>Response</h6>
-                    <pre class="h-100 m-0 rounded-1"><code id="new-thread-response" class="h-100 language-json"></code></pre>
+                    <pre class="h-100 m-0 rounded-1 api-resposne"><code id="new-thread-response" class="h-100 language-json"></code></pre>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div class="col">
+            <div class="card text-white">
+
+            </div>
+          </div>
         </div>
       </div>
     </main>
-
-    <div id='testui' style='margin-left: 5%'>
-
-      <h2 style="text-align: left">API Tests:</h2>
-
-      <h4>New thread (POST /api/threads/:board)</h4>
-
-      <form action="/api/threads/test" method="post" id="newThread">
-        <input type='text' placeholder='board' id='board1' name='board' required=''><br>
-        <textarea type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
-        <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
-        <input type="submit" value="Submit">
-      </form>
-
-      <hr>
 
       <h4>Report thread (PUT /api/threads/:board)</h4>
 
