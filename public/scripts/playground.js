@@ -44,9 +44,22 @@ $(function () {
   });
 
   // setup listeners for add reply form and inputs
-  $('#newReply').submit(function () {
-    var board = $('#board4').val();
-    $(this).attr('action', '/api/replies/' + board);
+  $('#add-reply-form').submit(addReply);
+
+  $('#add-reply-board').on('input', e => {
+    $('#add-reply-board-error').text('');
+  });
+
+  $('#add-reply-thread-id').on('input', e => {
+    $('#add-reply-thread-id-error').text('');
+  });
+
+  $('#add-reply-text').on('input', e => {
+    $('#add-reply-text-error').text('');
+  });
+
+  $('#add-reply-delete-password').on('input', e => {
+    $('#add-reply-delete-password-error').text('');
   });
 
   // setup listeners for report reply form and inputs
@@ -192,6 +205,49 @@ const deleteThread = e => {
     error: (res, err) => {
       const text = res.responseJSON ?? res.responseText;
       displayResponse($('#delete-thread-response'), text);
+    },
+  });
+};
+
+const addReply = e => {
+  e.preventDefault();
+  const data = formDataToJson($(e.target).serializeArray());
+  const hasBoard = data?.board ? true : false;
+  const hasThreadId = data?.thread_id ? true : false;
+  const hasText = data?.text ? true : false;
+  const hasDeletePassword = data?.delete_password ? true : false;
+
+  if (!hasBoard || !hasThreadId || !hasText || !hasDeletePassword) {
+    if (!hasBoard) {
+      $('#add-reply-board-error').text('Please enter a board');
+    }
+
+    if (!hasThreadId) {
+      $('#add-reply-thread-id-error').text('Please enter a thread id');
+    }
+
+    if (!hasText) {
+      $('#add-reply-text-error').text('Please enter reply text');
+    }
+
+    if (!hasDeletePassword) {
+      $('#add-reply-delete-password-error').text(
+        'Please enter a delete password'
+      );
+    }
+
+    return;
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: `/api/replies/${data.board}`,
+    data: data,
+    success: reply => {
+      displayResponse($('#new-reply-response'), reply);
+    },
+    error: (res, err) => {
+      displayResponse($('#new-reply-response'), res.responseJSON);
     },
   });
 };
