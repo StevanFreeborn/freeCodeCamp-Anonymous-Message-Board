@@ -1,4 +1,8 @@
 $(function () {
+  // make containers collapse and expand
+  $('.collapse-expand-button').click(handleExpandCollapse);
+
+  // setup listeners for add thread form and inputs
   $('#add-thread-form').submit(addThread);
 
   $('#add-thread-board').on('input', e => {
@@ -13,11 +17,7 @@ $(function () {
     $('#add-thread-delete-password-error').text('');
   });
 
-  $('#newReply').submit(function () {
-    var board = $('#board4').val();
-    $(this).attr('action', '/api/replies/' + board);
-  });
-
+  // setup listeners for report thread form and inputs
   $('#report-thread-form').submit(reportThread);
 
   $('#report-thread-board').on('input', e => {
@@ -28,19 +28,28 @@ $(function () {
     $('#report-thread-id-error').text('');
   });
 
-  $('#deleteThread').submit(function (e) {
-    var url = '/api/threads/' + $('#board3').val();
-    $.ajax({
-      type: 'DELETE',
-      url: url,
-      data: $(this).serialize(),
-      success: function (data) {
-        alert(data);
-      },
-    });
-    e.preventDefault();
+  // setup listeners for delete thread form and inputs
+  $('#delete-thread-form').submit(deleteThread);
+
+  $('#delete-thread-board').on('input', e => {
+    $('#delete-thread-board-error').text('');
   });
 
+  $('#delete-thread-id').on('input', e => {
+    $('#delete-thread-id-error').text('');
+  });
+
+  $('#delete-thread-delete-password').on('input', e => {
+    $('#delete-thread-delete-password-error').text('');
+  });
+
+  // setup listeners for add reply form and inputs
+  $('#newReply').submit(function () {
+    var board = $('#board4').val();
+    $(this).attr('action', '/api/replies/' + board);
+  });
+
+  // setup listeners for report reply form and inputs
   $('#reportReply').submit(function (e) {
     var url = '/api/replies/' + $('#board5').val();
     $.ajax({
@@ -53,7 +62,8 @@ $(function () {
     });
     e.preventDefault();
   });
-  
+
+  // setup listeners for delete reply form and inputs
   $('#deleteReply').submit(function (e) {
     var url = '/api/replies/' + $('#board6').val();
     $.ajax({
@@ -67,6 +77,16 @@ $(function () {
     e.preventDefault();
   });
 });
+
+const handleExpandCollapse = e => {
+  const button = $(e.currentTarget);
+  const target = button.attr('data-target');
+  const container = $(`#${target}`);
+  const icons = button.children();
+
+  container.toggleClass('visually-hidden');
+  icons.toggleClass('visually-hidden');
+};
 
 const addThread = e => {
   e.preventDefault();
@@ -132,7 +152,46 @@ const reportThread = e => {
       displayResponse($('#report-thread-response'), res);
     },
     error: (res, err) => {
-      displayResponse($('#report-thread-response'), res.responseText);
+      displayResponse($('#report-thread-response'), res.responseJSON);
+    },
+  });
+};
+
+const deleteThread = e => {
+  e.preventDefault();
+  const data = formDataToJson($(e.target).serializeArray());
+  const hasBoard = data?.board ? true : false;
+  const hasThreadId = data?.thread_id ? true : false;
+  const hasDeletePassword = data?.delete_password ? true : false;
+
+  if (!hasBoard || !hasThreadId || !hasDeletePassword) {
+    if (!hasBoard) {
+      $('#delete-thread-board-error').text('Please enter a board');
+    }
+
+    if (!hasThreadId) {
+      $('#delete-thread-id-error').text('Please enter thread id');
+    }
+
+    if (!hasDeletePassword) {
+      $('#delete-thread-delete-password-error').text(
+        'Please enter a delete password'
+      );
+    }
+
+    return;
+  }
+
+  $.ajax({
+    type: 'DELETE',
+    url: `/api/threads/${data.board}`,
+    data: data,
+    success: res => {
+      displayResponse($('#delete-thread-response'), res);
+    },
+    error: (res, err) => {
+      const text = res.responseJSON ?? res.responseText;
+      displayResponse($('#delete-thread-response'), text);
     },
   });
 };
@@ -145,6 +204,7 @@ const formDataToJson = formData => {
 };
 
 const displayResponse = (jObj, response) => {
-  jObj.text(JSON.stringify(response, null, 4));
-  hljs.highlightAll();
+  const json = JSON.stringify(response, null, 4);
+  const html = hljs.highlight(json, { language: 'json' }).value;
+  jObj.html(html);
 };
