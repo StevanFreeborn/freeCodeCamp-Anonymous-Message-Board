@@ -1,36 +1,42 @@
 import mongoose from 'mongoose';
 
 export default function () {
-    let mongoConnectionString;
+  let mongoConnectionString;
 
-    switch (process.env.NODE_ENV) {
-        case 'development':
-            mongoConnectionString = process.env.MONGO_DEV_URI
-            break;
-        case 'test':
-            mongoConnectionString = process.env.MONGO_TEST_URI
-            break;
-        default:
-            mongoConnectionString = process.env.MONGO_PROD_URI
-            break;
-    }
+  switch (process.env.NODE_ENV) {
+    case 'development':
+      mongoConnectionString = process.env.MONGO_DEV_URI;
+      break;
+    case 'test':
+      mongoConnectionString = process.env.MONGO_TEST_URI;
+      break;
+    default:
+      mongoConnectionString = process.env.MONGO_PROD_URI;
+      break;
+  }
 
-    try {
-        mongoose.connect(mongoConnectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-        
-        mongoose.connection.on('error', err => {
-            console.log(err);
-        });
+  try {
+    mongoose.connect(mongoConnectionString, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-        mongoose.connection.on('disconnected', () => {
-            console.log(`Server disconnected from database at ${new Date().toISOString()}`)
-        })
+    mongoose.connection.on('error', err => {
+      console.log(err);
+    });
 
-        console.log(`Server connected successfully to ${process.env.NODE_ENV} database.`)
-        return true;
-    }
-    catch (err) {
-        console.log(err);
-        return false;
-    }
+    mongoose.connection.on('disconnected', () => {
+      console.log(
+        `Server disconnected from database at ${new Date().toISOString()}`
+      );
+    });
+
+    console.log(
+      `Server connected successfully to ${process.env.NODE_ENV} database.`
+    );
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
 }

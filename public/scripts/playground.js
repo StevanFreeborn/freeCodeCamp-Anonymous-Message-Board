@@ -1,27 +1,37 @@
 $(function () {
-  $("#add-thread-form").submit(addThread);
+  $('#add-thread-form').submit(addThread);
 
-  $("#add-thread-board").on("input", (e) => {
-    $("#add-thread-board-error").text("");
+  $('#add-thread-board').on('input', e => {
+    $('#add-thread-board-error').text('');
   });
 
-  $("#add-thread-text").on("input", (e) => {
-    $("#add-thread-text-error").text("");
+  $('#add-thread-text').on('input', e => {
+    $('#add-thread-text-error').text('');
   });
 
-  $("#add-thread-delete-password").on("input", (e) => {
-    $("#add-thread-delete-password-error").text("");
+  $('#add-thread-delete-password').on('input', e => {
+    $('#add-thread-delete-password-error').text('');
   });
 
-  $("#newReply").submit(function () {
-    var board = $("#board4").val();
-    $(this).attr("action", "/api/replies/" + board);
+  $('#newReply').submit(function () {
+    var board = $('#board4').val();
+    $(this).attr('action', '/api/replies/' + board);
   });
 
-  $("#reportThread").submit(function (e) {
-    var url = "/api/threads/" + $("#board2").val();
+  $('#report-thread-form').submit(reportThread);
+
+  $('#report-thread-board').on('input', e => {
+    $('#report-thread-board-error').text('');
+  });
+
+  $('#report-thread-id').on('input', e => {
+    $('#report-thread-id-error').text('');
+  });
+
+  $('#deleteThread').submit(function (e) {
+    var url = '/api/threads/' + $('#board3').val();
     $.ajax({
-      type: "PUT",
+      type: 'DELETE',
       url: url,
       data: $(this).serialize(),
       success: function (data) {
@@ -30,10 +40,11 @@ $(function () {
     });
     e.preventDefault();
   });
-  $("#deleteThread").submit(function (e) {
-    var url = "/api/threads/" + $("#board3").val();
+
+  $('#reportReply').submit(function (e) {
+    var url = '/api/replies/' + $('#board5').val();
     $.ajax({
-      type: "DELETE",
+      type: 'PUT',
       url: url,
       data: $(this).serialize(),
       success: function (data) {
@@ -42,22 +53,11 @@ $(function () {
     });
     e.preventDefault();
   });
-  $("#reportReply").submit(function (e) {
-    var url = "/api/replies/" + $("#board5").val();
+  
+  $('#deleteReply').submit(function (e) {
+    var url = '/api/replies/' + $('#board6').val();
     $.ajax({
-      type: "PUT",
-      url: url,
-      data: $(this).serialize(),
-      success: function (data) {
-        alert(data);
-      },
-    });
-    e.preventDefault();
-  });
-  $("#deleteReply").submit(function (e) {
-    var url = "/api/replies/" + $("#board6").val();
-    $.ajax({
-      type: "DELETE",
+      type: 'DELETE',
       url: url,
       data: $(this).serialize(),
       success: function (data) {
@@ -68,7 +68,7 @@ $(function () {
   });
 });
 
-const addThread = (e) => {
+const addThread = e => {
   e.preventDefault();
   const data = formDataToJson($(e.target).serializeArray());
   const hasBoard = data?.board ? true : false;
@@ -76,29 +76,68 @@ const addThread = (e) => {
   const hasDeletePassword = data?.delete_password ? true : false;
 
   if (!hasBoard || !hasText || !hasDeletePassword) {
-    if (!hasBoard) $("#add-thread-board-error").text("Please select a board");
-    if (!hasText) $("#add-thread-text-error").text("Please enter thread text");
-    if (!hasDeletePassword)
-      $("#add-thread-delete-password-error").text(
-        "Please enter a delete password"
+    if (!hasBoard) {
+      $('#add-thread-board-error').text('Please enter a board');
+    }
+
+    if (!hasText) {
+      $('#add-thread-text-error').text('Please enter thread text');
+    }
+
+    if (!hasDeletePassword) {
+      $('#add-thread-delete-password-error').text(
+        'Please enter a delete password'
       );
+    }
+
     return;
   }
 
   $.ajax({
-    type: "POST",
+    type: 'POST',
     url: `/api/threads/${data.board}`,
     data: data,
-    success: (thread) => {
-      displayResponse($("#new-thread-response"), thread);
+    success: thread => {
+      displayResponse($('#new-thread-response'), thread);
     },
     error: (res, err) => {
-      displayResponse($("#new-thread-response"), res.responseJSON);
+      displayResponse($('#new-thread-response'), res.responseJSON);
     },
   });
 };
 
-const formDataToJson = (formData) => {
+const reportThread = e => {
+  e.preventDefault();
+  const data = formDataToJson($(e.target).serializeArray());
+  const hasBoard = data?.board ? true : false;
+  const hasThreadId = data?.thread_id ? true : false;
+
+  if (!hasBoard || !hasThreadId) {
+    if (!hasBoard) {
+      $('#report-thread-board-error').text('Please enter a board');
+    }
+
+    if (!hasThreadId) {
+      $('#report-thread-id-error').text('Please enter thread id');
+    }
+
+    return;
+  }
+
+  $.ajax({
+    type: 'PUT',
+    url: `/api/threads/${data.board}`,
+    data: data,
+    success: res => {
+      displayResponse($('#report-thread-response'), res);
+    },
+    error: (res, err) => {
+      displayResponse($('#report-thread-response'), res.responseText);
+    },
+  });
+};
+
+const formDataToJson = formData => {
   return formData.reduce((prev, curr) => {
     prev[curr.name] = curr.value;
     return prev;

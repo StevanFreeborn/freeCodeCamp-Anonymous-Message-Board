@@ -4,7 +4,7 @@ function objParser(str, init) {
   var openSym = ['[', '{', '"', "'", '('];
   var closeSym = [']', '}', '"', "'", ')'];
   var type;
-  for (var i = (init || 0); i < str.length; i++) {
+  for (var i = init || 0; i < str.length; i++) {
     type = openSym.indexOf(str[i]);
     if (type !== -1) break;
   }
@@ -27,7 +27,7 @@ function objParser(str, init) {
   return {
     start: i,
     end: k,
-    obj: obj
+    obj: obj,
   };
 }
 
@@ -36,14 +36,15 @@ function replacer(str) {
   var obj;
   var cnt = 0;
   var data = [];
-  while (obj = objParser(str)) {
+  while ((obj = objParser(str))) {
     data[cnt] = obj.obj;
-    str = str.substring(0, obj.start) + '__#' + cnt++ + str.substring(obj.end + 1)
+    str =
+      str.substring(0, obj.start) + '__#' + cnt++ + str.substring(obj.end + 1);
   }
   return {
     str: str,
-    dictionary: data
-  }
+    dictionary: data,
+  };
 }
 
 function splitter(str) {
@@ -57,19 +58,18 @@ function splitter(str) {
       m = a.match(/__#(\d+)/);
     }
     return a.trim();
-  })
+  });
   return args;
 }
 
 export default function assertionAnalyser(body) {
-
   // already filtered in the test runner
   // // remove comments
   // body = body.replace(/\/\/.*\n|\/\*.*\*\//g, '');
   // // get test function body
   // body = body.match(/\{\s*([\s\S]*)\}\s*$/)[1];
 
-  if (!body) return "invalid assertion";
+  if (!body) return 'invalid assertion';
   // replace assertions bodies, so that they cannot
   // contain the word 'assertion'
 
@@ -87,7 +87,12 @@ export default function assertionAnalyser(body) {
     var pre = splittedAssertions[i].match(/browser\s*\.\s*/) ? 'browser.' : '';
     return pre + m[1];
   });
-  if (methods.some(function (m) { return !m })) return "invalid assertion";
+  if (
+    methods.some(function (m) {
+      return !m;
+    })
+  )
+    return 'invalid assertion';
   // remove parens from the assertions bodies
   var bodies = assertionBodies.map(function (b) {
     return s.dictionary[b].slice(1, -1).trim();
@@ -95,8 +100,8 @@ export default function assertionAnalyser(body) {
   assertions = methods.map(function (m, i) {
     return {
       method: m,
-      args: splitter(bodies[i]) //replace objects, split on ',' ,then restore objects
-    }
-  })
+      args: splitter(bodies[i]), //replace objects, split on ',' ,then restore objects
+    };
+  });
   return assertions;
 }
