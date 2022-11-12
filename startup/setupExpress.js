@@ -3,11 +3,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 export default function () {
-    const app = express();
-    app.use('/public', express.static(process.cwd() + '/public'));
-    app.use(cors({ origin: '*' }));
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json());
+  const app = express();
+  app.use('/public', express.static(process.cwd() + '/public'));
+  app.use(cors({ origin: '*' }));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
 
-    return app;
+  return app;
 }

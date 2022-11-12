@@ -1,25 +1,27 @@
-import BoardDto from "../../dtos/boardDto.js";
-import BoardService from "../../services/boardService.js"
+import BoardDto from '../../dtos/boardDto.js';
+import BoardService from '../../services/boardService.js';
 
 export default class BoardController {
-    static getBoards = async (req, res) => {
-        const boards = await BoardService.getBoards();
-        const boardDtos = boards.map(board => new BoardDto(board));
+  static getBoards = async (req, res) => {
+    const boards = await BoardService.getBoards();
+    const boardDtos = boards.map(board => new BoardDto(board));
 
-        return res.status(200).json(boardDtos);
+    return res.status(200).json(boardDtos);
+  };
+
+  static createBoard = async (req, res) => {
+    const { name } = req.body;
+    let board = await BoardService.getBoardByName(name);
+
+    if (board != null) {
+      return res
+        .status(400)
+        .json({ error: `Board with name ${name} already exists` });
     }
 
-    static createBoard = async (req, res) => {
-        const { name } = req.body;
-        let board = await BoardService.getBoardByName(name);
+    board = await BoardService.createBoard(name);
+    const boardDto = new BoardDto(board);
 
-        if (board != null) {
-            return res.status(400).json({ error: `Board with name ${name} already exists`, })
-        }
-
-        board = await BoardService.createBoard(name);
-        const boardDto = new BoardDto(board);
-
-        return res.status(201).json(boardDto);
-    }
+    return res.status(201).json(boardDto);
+  };
 }
