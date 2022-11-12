@@ -78,17 +78,48 @@ $(function () {
   });
 
   // setup listeners for delete reply form and inputs
-  $('#deleteReply').submit(function (e) {
-    var url = '/api/replies/' + $('#board6').val();
+  $('#delete-reply-form').submit(e => {
+    e.preventDefault();
+    const data = formDataToJson($(e.target).serializeArray());
+    const hasBoard = data?.board ? true : false;
+    const hasThreadId = data?.thread_id ? true : false;
+    const hasReplyId = data?.reply_id ? true : false;
+    const hasDeletePassword = data?.delete_password ? true : false;
+  
+    if (!hasBoard || !hasThreadId || !hasReplyId || !hasDeletePassword) {
+      if (!hasBoard) {
+        $('#delete-reply-board-error').text('Please enter a board');
+      }
+  
+      if (!hasThreadId) {
+        $('#delete-reply-thread-id-error').text('Please enter thread id');
+      }
+
+      if (!hasReplyId) {
+        $('#delete-reply-id-error').text('Please enter reply id');
+      }
+  
+      if (!hasDeletePassword) {
+        $('#delete-reply-delete-password-error').text(
+          'Please enter a delete password'
+        );
+      }
+  
+      return;
+    }
+  
     $.ajax({
       type: 'DELETE',
-      url: url,
-      data: $(this).serialize(),
-      success: function (data) {
-        alert(data);
+      url: `/api/replies/${data.board}`,
+      data: data,
+      success: res => {
+        displayResponse($('#delete-reply-response'), res);
+      },
+      error: (res, err) => {
+        const text = res.responseJSON ?? res.responseText;
+        displayResponse($('#delete-reply-response'), text);
       },
     });
-    e.preventDefault();
   });
 });
 
