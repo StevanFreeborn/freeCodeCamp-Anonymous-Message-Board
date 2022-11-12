@@ -63,17 +63,18 @@ $(function () {
   });
 
   // setup listeners for report reply form and inputs
-  $('#reportReply').submit(function (e) {
-    var url = '/api/replies/' + $('#board5').val();
-    $.ajax({
-      type: 'PUT',
-      url: url,
-      data: $(this).serialize(),
-      success: function (data) {
-        alert(data);
-      },
-    });
-    e.preventDefault();
+  $('#report-reply-form').submit(reportReply);
+
+  $('#report-reply-board').on('input', e => {
+    $('#report-reply-board-error').text('');
+  });
+
+  $('#report-reply-thread-id').on('input', e => {
+    $('#report-reply-thread-id-error').text('');
+  });
+
+  $('#report-reply-id').on('input', e => {
+    $('#report-reply-id-error').text('');
   });
 
   // setup listeners for delete reply form and inputs
@@ -248,6 +249,42 @@ const addReply = e => {
     },
     error: (res, err) => {
       displayResponse($('#new-reply-response'), res.responseJSON);
+    },
+  });
+};
+
+const reportReply = e => {
+  e.preventDefault();
+  const data = formDataToJson($(e.target).serializeArray());
+  const hasBoard = data?.board ? true : false;
+  const hasThreadId = data?.thread_id ? true : false;
+  const hasReplyId = data?.reply_id ? true : false;
+
+  if (!hasBoard || !hasThreadId || !hasReplyId) {
+    if (!hasBoard) {
+      $('#report-reply-board-error').text('Please enter a board');
+    }
+
+    if (!hasThreadId) {
+      $('#report-reply-thread-id-error').text('Please enter thread id');
+    }
+
+    if (!hasReplyId) {
+      $('#report-reply-id-error').text('Please enter reply id');
+    }
+
+    return;
+  }
+
+  $.ajax({
+    type: 'PUT',
+    url: `/api/replies/${data.board}`,
+    data: data,
+    success: res => {
+      displayResponse($('#report-reply-response'), res);
+    },
+    error: (res, err) => {
+      displayResponse($('#report-reply-response'), res.responseJSON);
     },
   });
 };
