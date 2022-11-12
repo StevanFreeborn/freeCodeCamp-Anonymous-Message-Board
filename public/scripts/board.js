@@ -17,7 +17,7 @@ $(async () => {
         $(`#${thread_id} .card`)
         .removeClass('bg-success')
         .addClass('bg-warning');
-
+        $(`#${thread_id} .thread-updated`).text(formatDate(new Date().toISOString()));
         $(`#${thread_id} .thread-report-button`).remove();
       },
       error: (res, err) => {
@@ -85,7 +85,8 @@ const createThreadElement = (thread) => {
                       <span class="fw-bold">Created:</span> ${formatDate(thread.created_on)}
                     </div>
                     <div>
-                      <span class="fw-bold">Updated:</span> ${formatDate(thread.bumped_on)}
+                      <span class="fw-bold">Updated:</span> 
+                      <span class="thread-updated">${formatDate(thread.updated)}</span>
                     </div>
                   </div>
                   <div id="thread-action-buttons">
