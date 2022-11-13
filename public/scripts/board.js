@@ -55,6 +55,7 @@ $(async () => {
       success: res => {
         const modal = bootstrap.Modal.getInstance($('#delete-thread-modal')[0]);
         modal.hide();
+        // TODO: Remove deleeted thread from dom
       },
       error: (res, err) => {
         const text = res.responseJSON.error
