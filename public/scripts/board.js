@@ -53,11 +53,13 @@ $(async () => {
       url: `/api/threads/${board}`,
       data: { thread_id, delete_password, },
       success: res => {
-        const modal = new bootstrap.Modal($('#delete-thread-modal'))
-        modal.toggle();
+        const modal = bootstrap.Modal.getInstance($('#delete-thread-modal')[0]);
+        modal.hide();
       },
       error: (res, err) => {
-        const text = res.responseText ?? `Unable to delete thread ${thread_id}`;
+        const text = res.responseJSON.error
+          ? res.responseJSON.error
+          : res.responseText ?? `Unable to delete thread ${thread_id}`;
         $('#delete-thread-delete-password-error').text(text);
       },
     });
