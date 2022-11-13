@@ -37,6 +37,6 @@ export default class ThreadService {
     }
 
     static deleteThreadById = async (threadId) => {
-        return await Thread.deleteOne({ id: threadId, }).exec();
+        return await Thread.deleteOne({ _id: threadId, }).exec();
     }
 }
