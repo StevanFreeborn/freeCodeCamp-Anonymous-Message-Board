@@ -37,18 +37,113 @@
       </div>
     </header>
 
-    <div id='submitNewThread'>
-      <h3>Submit a new thread:</h3>
-      <form id="newThread" method="post" action="/api/">
-        <textarea rows="8" cols="120" type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
-        <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
-        <input type="submit" value="Submit">
-      </form>
-    </div>
-
-    <div id='boardDisplay'></div>
-
-    <hr style='margin: 50px; margin-top: 200px'>
+    <main>
+      <div class="container-fluid">
+        <div class="row my-3 gy-2 gx-3 d-flex flex-wrap align-items-center justify-content-between">
+          <div class="col-auto">
+            <h1 id="board-name" class="text-info fw-bold m-0"></h1>
+          </div>
+          <div class="col-auto">
+            <button id="add-thread-button" class="btn btn-sm btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="threads-container">
+        </div>
+      </div>
+      <div id="add-thread-modal" class="modal text-white" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Thread</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col">
+                  <div id="add-thread-error" class="text-start text-danger fw-bold"></div>
+                  <form id="add-thread-form">
+                    <div class="form-group mb-3">
+                      <label for="add-thread-text" class="form-label">Thread Text</label>
+                      <textarea class="form-control" type='text' id='add-thread-text' name='text'></textarea>
+                      <div id="add-thread-text-error" class="text-start text-danger fw-bold"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="add-thread-delete-password" class="form-label">Delete Password</label>
+                      <input class="form-control" type='password' id="add-thread-delete-password"
+                        name='delete_password'>
+                      <div id="add-thread-delete-password-error" class="text-start text-danger fw-bold"></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="add-thread-modal-button" type="button" class="btn btn-primary">Add Thread</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="delete-thread-modal" class="modal text-white" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm Thread Deletion</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col">
+                  <form id="delete-thread-form">
+                    <div class="form-group mb-3">
+                      <label for="delete-thread-delete-password" class="form-label">Delete Password</label>
+                      <input class="form-control" type='password' id="delete-thread-delete-password"
+                        name='delete_password'>
+                      <div id="delete-thread-delete-password-error" class="text-start text-danger fw-bold"></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="delete-thread-modal-button" type="button" class="btn btn-danger">Delete Thread</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="delete-reply-modal" class="modal text-white" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm Reply Deletion</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col">
+                  <form id="delete-reply-form">
+                    <div class="form-group mb-3">
+                      <label for="delete-reply-delete-password" class="form-label">Delete Password</label>
+                      <input class="form-control" type='password' id="delete-reply-delete-password"
+                        name='delete_password'>
+                      <div id="delete-reply-delete-password-error" class="text-start text-danger fw-bold"></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="delete-reply-modal-button" type="button" class="btn btn-danger">Delete Reply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </main>
 
     <footer class="container-fluid mt-auto">
       <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top">

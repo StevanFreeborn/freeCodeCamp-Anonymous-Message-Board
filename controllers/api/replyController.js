@@ -34,6 +34,7 @@ export default class ReplyController {
     const reply = await ReplyService.createReply(thread.id, text, hash);
 
     thread.replies.push(reply.id);
+    thread.bumped_on = reply.bumped_on;
     await thread.save();
 
     const replyDto = new ReplyDto(reply);
