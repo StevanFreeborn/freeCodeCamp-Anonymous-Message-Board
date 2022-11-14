@@ -22,6 +22,11 @@ $(async () => {
   $('.reply-delete-button').click(displayReplyThreadModal);
 
   $('#delete-reply-modal').on('show.bs.modal', deleteReplyModalShowHandler);
+
+  // TODO: reset reply modal form and error text when modal is hidden.
+  // TODO: reset reply delete password error text when input changes.
+  // TODO: implement deleting reply
+
 });
 
 const deleteReplyModalShowHandler = e => {
