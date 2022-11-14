@@ -1,9 +1,17 @@
-const currentBoard = window.location.pathname.slice(3);
+const currentBoard = decodeURI(window.location.pathname).slice(3);
 
 $(async () => {
   $('#board-name').text(currentBoard);
 
   await displayThreads();
+
+  $('#add-thread-button').click(displayAddThreadModal);
+
+  $('#add-thread-modal').on('hide.bs.modal', addThreadModalHideHandler);
+  
+  // TODO: Add input handlers to add thread form inputs to reset error message on change.
+
+  $('#add-thread-modal-button').click(addThread);
 
   $('.thread-report-button').click(reportThread);
 
@@ -27,10 +35,62 @@ $(async () => {
 
   $('#delete-reply-delete-password').on('input', deleteReplyPasswordInputHandler);
 
-  // TODO: implement deleting reply
   $('#delete-reply-modal-button').click(deleteReply);
-
 });
+
+const addThread = e => {
+  const data = formDataToJson($('#add-thread-form').serializeArray());
+  const hasText = data?.text ? true : false;
+  const hasDeletePassword = data?.delete_password ? true : false;
+
+  if (!hasText || !hasDeletePassword) {
+    if (!hasText) {
+      $('#add-thread-text-error').text('Please enter thread text');
+    }
+
+    if (!hasDeletePassword) {
+      $('#add-thread-delete-password-error').text(
+        'Please enter a delete password'
+      );
+    }
+
+    return;
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: `/api/threads/${currentBoard}`,
+    data: data,
+    success: thread => {
+      const modal = bootstrap.Modal.getInstance($('#add-thread-modal')[0]);
+      modal.hide();
+      const threadElement = createThreadElement(thread);
+      $('#threads-container').prepend(threadElement);
+    },
+    error: (res, err) => {
+      const text = res?.responseJSON?.error
+        ? res.responseJSON.error
+        : res?.responseText ?? `Unable to add thread`;
+      $('#add-thread-error').text(text);
+    },
+  });
+}
+
+const addThreadTextInputHandler = e => {}
+
+const addThreadDeletePasswordInputHandler = e => {}
+
+const addThreadModalHideHandler = e => {
+  $('#add-thread-form')[0].reset();
+  $('#add-thread-error').text('');
+  $('#add-thread-text-error').text('');
+  $('#add-thread-delete-password-error').text('');
+}
+
+const displayAddThreadModal = e => {
+  const modal = new bootstrap.Modal($('#add-thread-modal')[0]);
+  modal.show();
+}
 
 const deleteReply = e => {
   const board = currentBoard;
@@ -331,6 +391,13 @@ const createReplyElement = reply => {
               </div>
             </div>
           </div>`;
+};
+
+const formDataToJson = formData => {
+  return formData.reduce((prev, curr) => {
+    prev[curr.name] = curr.value;
+    return prev;
+  }, {});
 };
 
 const formatDate = date => {
