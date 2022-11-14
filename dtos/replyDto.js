@@ -5,5 +5,6 @@ export default class ReplyDto {
     this.text = reply.text;
     this.created_on = reply.created_on;
     this.bumped_on = reply.bumped_on;
+    this.reported = reply.reported;
   }
 }
