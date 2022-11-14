@@ -9,7 +9,6 @@ $(async () => {
 
   $('#add-thread-modal').on('hide.bs.modal', addThreadModalHideHandler);
   
-  // TODO: Add input handlers to add thread form inputs to reset error message on change.
   $('#add-thread-text').on('input', addThreadTextInputHandler)
   
   $('#add-thread-delete-password').on('input', addThreadDeletePasswordInputHandler);
