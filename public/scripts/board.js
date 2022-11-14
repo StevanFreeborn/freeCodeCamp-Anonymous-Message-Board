@@ -23,11 +23,65 @@ $(async () => {
 
   $('#delete-reply-modal').on('show.bs.modal', deleteReplyModalShowHandler);
 
-  // TODO: reset reply modal form and error text when modal is hidden.
-  // TODO: reset reply delete password error text when input changes.
+  $('#delete-reply-modal').on('hide.bs.modal', deleteReplyModalHideHandler);
+
+  $('#delete-reply-delete-password').on('input', deleteReplyPasswordInputHandler);
+
   // TODO: implement deleting reply
+  $('#delete-reply-modal-button').click(deleteReply);
 
 });
+
+const deleteReply = e => {
+  const board = currentBoard;
+  const thread_id = e.currentTarget.getAttribute('data-thread-id');
+  const reply_id = e.currentTarget.getAttribute('data-reply-id');
+  const delete_password = $('#delete-reply-delete-password').val();
+
+  if (!delete_password) {
+    $('#delete-reply-delete-password-error').text(
+      'Please enter a delete password'
+    );
+    return;
+  }
+
+  $.ajax({
+    type: 'DELETE',
+    url: `/api/replies/${board}`,
+    data: { thread_id, delete_password, reply_id, },
+    success: res => {
+      const modal = bootstrap.Modal.getInstance($('#delete-reply-modal')[0]);
+      modal.hide();
+      $(`#${reply_id} .card`)
+      .removeClass('bg-success')
+      .removeClass('bg-warning')
+      .addClass('bg-danger');
+
+      $(`#${reply_id} .reply-text`).text('[deleted]');
+
+      $(`#${reply_id} .reply-updated`).text(
+        formatDate(new Date().toISOString())
+      );
+
+      $(`#${reply_id} .reply-delete-button`).remove();
+    },
+    error: (res, err) => {
+      const text = res?.responseJSON?.error
+        ? res.responseJSON.error
+        : res?.responseText ?? `Unable to delete reply ${reply_id}`;
+      $('#delete-reply-delete-password-error').text(text);
+    },
+  });
+}
+
+const deleteReplyPasswordInputHandler = e => {
+  $('#delete-reply-delete-password-error').text('');
+}
+
+const deleteReplyModalHideHandler = e => {
+  $('#delete-reply-form')[0].reset();
+  $('#delete-reply-delete-password-error').text('');
+}
 
 const deleteReplyModalShowHandler = e => {
   const threadId = e.relatedTarget.getAttribute('data-thread-id');
@@ -39,7 +93,7 @@ const deleteReplyModalShowHandler = e => {
 }
 
 const displayReplyThreadModal = e => {
-  const modal = new bootstrap.Modal($('#delete-reply-modal'));
+  const modal = new bootstrap.Modal($('#delete-reply-modal')[0]);
   modal.toggle(e.currentTarget);
 }
 
@@ -54,12 +108,12 @@ const reportReply = e => {
     url: `/api/replies/${board}`,
     data: { board, thread_id, reply_id },
     success: res => {
-      console.log($(`#${reply_id} .card`));
       $(`#${reply_id} .card`).removeClass('bg-success').addClass('bg-warning');
 
       $(`#${reply_id} .reply-updated`).text(
         formatDate(new Date().toISOString())
       );
+
       $(`#${reply_id} .reply-report-button`).remove();
     },
     error: (res, err) => {
@@ -116,7 +170,7 @@ const deleteThreadModalShowHandler = e => {
 };
 
 const displayDeleteThreadModal = e => {
-  const modal = new bootstrap.Modal($('#delete-thread-modal'));
+  const modal = new bootstrap.Modal($('#delete-thread-modal')[0]);
   modal.toggle(e.currentTarget);
 };
 
@@ -270,7 +324,7 @@ const createReplyElement = reply => {
                     </div>
                   </div>
                   <div id="reply-action-buttons">
-                    ${isReported ? '' : reportButton}
+                    ${isReported || isDeleted ? '' : reportButton}
                     ${isDeleted ? '' : deleteButton}
                   </div>
                 </div>
