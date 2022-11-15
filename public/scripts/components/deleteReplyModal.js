@@ -1,9 +1,9 @@
 import { formatDate } from "../utils/utilities.js";
 
-export default function createDeleteReplyModal(board) {
+export default function createDeleteReplyModal(board, reply) {
   const deleteReplyModal = document.createElement('div');
   deleteReplyModal.id = 'delete-reply-modal';
-  deleteReplyModal.classList.add('modal', 'text-white');
+  deleteReplyModal.classList.add('modal', 'fade', 'text-white');
   deleteReplyModal.tabIndex = '-1';
   deleteReplyModal.innerHTML = `
     <div class="modal-dialog">
@@ -27,7 +27,7 @@ export default function createDeleteReplyModal(board) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id="delete-reply-modal-button" type="button" class="btn btn-danger" data-thread-id='' data-reply-id=''>Delete Reply</button>
+                <button id="delete-reply-modal-button" type="button" class="btn btn-danger" data-thread-id="" data-reply-id="">Delete Reply</button>
             </div>
         </div>
     </div>
@@ -47,14 +47,6 @@ export default function createDeleteReplyModal(board) {
     '#delete-reply-delete-password'
   );
 
-  deleteReplyModal.addEventListener('show.bs.modal', e => {
-    const threadId = e.relatedTarget.getAttribute('data-thread-id');
-    const replyId = e.relatedTarget.getAttribute('data-reply-id');
-
-    deleteReplyButton.setAttribute('data-thread-id', threadId)
-    deleteReplyButton.setAttribute('data-reply-id', replyId);
-  });
-
   deleteReplyModal.addEventListener('hide.bs.modal', e => {
     deleteReplyForm.reset();
     deleteReplyPasswordError.innerHTML = '';
@@ -66,8 +58,6 @@ export default function createDeleteReplyModal(board) {
   });
 
   deleteReplyButton.addEventListener('click', e => {
-    const thread_id = e.currentTarget.getAttribute('data-thread-id');
-    const reply_id = e.currentTarget.getAttribute('data-reply-id');
     const delete_password = deleteReplyPasswordInput.value;
 
     if (!delete_password) {
@@ -78,34 +68,38 @@ export default function createDeleteReplyModal(board) {
     $.ajax({
       type: 'DELETE',
       url: `/api/replies/${board}`,
-      data: { thread_id, delete_password, reply_id },
+      data: { 
+        thread_id: reply.thread, 
+        delete_password, 
+        reply_id: reply._id 
+      },
       success: res => {
         const modal = bootstrap.Modal.getInstance(deleteReplyModal);
         modal.hide();
-        $(`#${reply_id} .card`)
+        $(`#${reply._id} .card`)
           .removeClass('bg-success')
           .removeClass('bg-warning')
           .addClass('bg-danger');
 
-        $(`#${reply_id} .reply-text`).text('[deleted]');
+        $(`#${reply._id} .reply-text`).text('[deleted]');
 
-        $(`#${reply_id} .reply-updated`).text(
+        $(`#${reply._id} .reply-updated`).text(
           formatDate(new Date().toISOString())
         );
 
-        $(`#${reply_id} .reply-delete-button`).remove();
-        $(`#${reply_id} .reply-report-button`).remove();
+        $(`#${reply._id} .reply-delete-button`).remove();
+        $(`#${reply._id} .reply-report-button`).remove();
       },
       error: (res, err) => {
         const text = res?.responseJSON?.error
           ? res.responseJSON.error
-          : res?.responseText ?? `Unable to delete reply ${reply_id}`;
-        $('#delete-reply-delete-password-error').text(text);
+          : res?.responseText ?? `Unable to delete reply ${reply._id}`;
+          deleteReplyPasswordError.innerHTML = text;
       },
     });
   });
 
-  const modal = new bootstrap.Modal(deleteReplyModal)
+  const modal = new bootstrap.Modal(deleteReplyModal);
 
   return modal;
 }

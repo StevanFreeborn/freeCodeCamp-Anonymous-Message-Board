@@ -5,10 +5,6 @@ const board = window.location.pathname.split('/').reverse()[1];
 const thread_id = window.location.pathname.split('/').reverse()[0];
 
 $(async () => {
-  await displayThread();
-});
-
-const displayThread = async () => {
   try {
     const thread = await $.ajax({
       type: 'GET',
@@ -16,12 +12,12 @@ const displayThread = async () => {
       data: { thread_id },
     });
 
-    const threadElement = createThread(board, thread);
-    $('#thread-container').append(threadElement);
+    const threadComponent = createThread(board, thread);
+    $('#thread-container').append(threadComponent);
 
     thread.replies.forEach(reply => {
-      const replyElement = createReply(board, reply);
-      $(`#thread-${thread._id}-reply-container`).append(replyElement);
+      const replyComponent = createReply(board, reply);
+      $(`#thread-${thread._id}-reply-container`).append(replyComponent);
     });
   } catch (err) {
     const text = err?.responseJSON?.error
@@ -29,4 +25,4 @@ const displayThread = async () => {
       : err?.responseText ?? `Unable to get thread ${thread_id}`;
     alert(text);
   }
-};
+});
