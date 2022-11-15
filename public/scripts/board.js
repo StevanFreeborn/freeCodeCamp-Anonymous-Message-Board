@@ -295,7 +295,7 @@ const displayThreads = async () => {
     $('#threads-container').append(threadElement);
 
     thread.replies.forEach(reply => {
-      const replyElement = createReply(reply);
+      const replyElement = createReply(currentBoard, reply);
       $(`#thread-${thread._id}-reply-container`).append(replyElement);
     });
   });
