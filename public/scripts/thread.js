@@ -1,5 +1,5 @@
-import createThreadElement from './components/threadElement.js';
-import createReplyElement from './components/replyElement.js';
+import createThread from './components/thread.js';
+import createReply from './components/reply.js';
 
 const board = window.location.pathname.split('/').reverse()[1];
 const thread_id = window.location.pathname.split('/').reverse()[0];
@@ -16,11 +16,11 @@ const displayThread = async () => {
       data: { thread_id },
     });
 
-    const threadElement = createThreadElement(board, thread);
+    const threadElement = createThread(board, thread);
     $('#thread-container').append(threadElement);
 
     thread.replies.forEach(reply => {
-      const replyElement = createReplyElement(board, reply);
+      const replyElement = createReply(board, reply);
       $(`#thread-${thread._id}-reply-container`).append(replyElement);
     });
   } catch (err) {

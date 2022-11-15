@@ -1,6 +1,6 @@
 import { formatDate } from '../utils/utilities.js';
 
-export default function createBoardCardElement(board) {
+export default function createBoardCard(board) {
   return `<div class="col-md-6">
                   <div class="card text-white bg-success">
                       <div class="card-header">

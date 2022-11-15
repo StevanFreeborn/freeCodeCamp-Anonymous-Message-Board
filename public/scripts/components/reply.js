@@ -1,7 +1,7 @@
 import { formatDate } from '../utils/utilities.js';
-import createDeleteReplyModal from './deleteReplyModalElement.js';
+import createDeleteReplyModal from './deleteReplyModal.js';
 
-export default function createReplyElement(board, reply) {
+export default function createReply(board, reply) {
   const isDeleted = reply.text == '[deleted]';
   const isReported = reply.reported;
   const cardBackground = isDeleted

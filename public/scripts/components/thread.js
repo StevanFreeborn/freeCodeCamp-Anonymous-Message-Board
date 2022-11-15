@@ -1,6 +1,6 @@
 import { formatDate } from '../utils/utilities.js';
 
-export default function createThreadElement(boardName, thread) {
+export default function createThread(boardName, thread) {
   const isReported = thread.reported;
   const reportButton = `<button class="btn btn-sm btn-warning thread-report-button" data-thread-id="${thread._id}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-flag-fill" viewBox="0 0 16 16">

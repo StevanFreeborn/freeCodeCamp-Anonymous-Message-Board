@@ -1,6 +1,6 @@
 import { formatDate, formDataToJson } from './utils/utilities.js';
-import createThreadElement from './components/threadElement.js';
-import createReplyElement from './components/replyElement.js';
+import createThread from './components/thread.js';
+import createReply from './components/reply.js';
 import createDeleteReplyModal from './components/deleteReplyModal.js';
 
 const currentBoard = decodeURI(window.location.pathname)
@@ -76,7 +76,7 @@ const addThread = e => {
     success: thread => {
       const modal = bootstrap.Modal.getInstance($('#add-thread-modal')[0]);
       modal.hide();
-      const threadElement = createThreadElement(currentBoard, thread);
+      const threadElement = createThread(currentBoard, thread);
       $('#threads-container').prepend(threadElement);
     },
     error: (res, err) => {
@@ -291,11 +291,11 @@ const displayThreads = async () => {
   });
 
   threads.forEach(thread => {
-    const threadElement = createThreadElement(currentBoard, thread);
+    const threadElement = createThread(currentBoard, thread);
     $('#threads-container').append(threadElement);
 
     thread.replies.forEach(reply => {
-      const replyElement = createReplyElement(reply);
+      const replyElement = createReply(reply);
       $(`#thread-${thread._id}-reply-container`).append(replyElement);
     });
   });
