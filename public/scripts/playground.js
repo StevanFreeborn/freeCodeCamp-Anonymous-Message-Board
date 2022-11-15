@@ -1,3 +1,5 @@
+import { formDataToJson } from './utils/utilities.js';
+
 $(function () {
   // make containers collapse and expand
   $('.collapse-expand-button').click(handleExpandCollapse);
@@ -318,13 +320,6 @@ const reportReply = e => {
       displayResponse($('#report-reply-response'), res.responseJSON);
     },
   });
-};
-
-const formDataToJson = formData => {
-  return formData.reduce((prev, curr) => {
-    prev[curr.name] = curr.value;
-    return prev;
-  }, {});
 };
 
 const displayResponse = (jObj, response) => {
