@@ -20,7 +20,7 @@ const displayThread = async () => {
     $('#thread-container').append(threadElement);
 
     thread.replies.forEach(reply => {
-      const replyElement = createReplyElement(reply);
+      const replyElement = createReplyElement(board, reply);
       $(`#thread-${thread._id}-reply-container`).append(replyElement);
     });
   } catch (err) {
