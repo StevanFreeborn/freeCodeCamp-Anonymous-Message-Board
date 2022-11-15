@@ -94,11 +94,9 @@ export default class ThreadController {
     );
 
     if (repliesDeletion.acknowledged == false) {
-      return res
-        .status(400)
-        .json({
-          error: `Unable to delete the replies for thread with id ${thread.id}`,
-        });
+      return res.status(400).json({
+        error: `Unable to delete the replies for thread with id ${thread.id}`,
+      });
     }
 
     return res.status(200).type('text').send('success');

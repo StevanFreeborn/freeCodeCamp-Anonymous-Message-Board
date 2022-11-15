@@ -5,11 +5,11 @@ export default class BoardService {
     return await Board.find({}).sort({ bumped_on: 'desc' }).exec();
   };
 
-  static getBoardByName = async boardName => {
+  static getBoardByName = async (boardName) => {
     return await Board.findOne({ name: boardName }).exec();
   };
 
-  static createBoard = async boardName => {
+  static createBoard = async (boardName) => {
     return await new Board({ name: boardName }).save();
   };
 }

@@ -2,7 +2,9 @@ import { formatDate, formDataToJson } from './utils/utilities.js';
 import createThreadElement from './components/threadElement.js';
 import createReplyElement from './components/replyElement.js';
 
-const currentBoard = decodeURI(window.location.pathname).split('/').reverse()[0];
+const currentBoard = decodeURI(window.location.pathname)
+  .split('/')
+  .reverse()[0];
 
 $(async () => {
   $('#board-name').text(currentBoard);
@@ -13,10 +15,13 @@ $(async () => {
   $('#add-thread-button').click(displayAddThreadModal);
 
   $('#add-thread-modal').on('hide.bs.modal', addThreadModalHideHandler);
-  
-  $('#add-thread-text').on('input', addThreadTextInputHandler)
-  
-  $('#add-thread-delete-password').on('input', addThreadDeletePasswordInputHandler);
+
+  $('#add-thread-text').on('input', addThreadTextInputHandler);
+
+  $('#add-thread-delete-password').on(
+    'input',
+    addThreadDeletePasswordInputHandler
+  );
 
   $('#add-thread-modal-button').click(addThread);
 
@@ -30,7 +35,10 @@ $(async () => {
 
   $('#delete-thread-modal').on('hide.bs.modal', deleteThreadModalHideHandler);
 
-  $('#delete-thread-delete-password').on('input', deleteThreadPasswordInputHandler);
+  $('#delete-thread-delete-password').on(
+    'input',
+    deleteThreadPasswordInputHandler
+  );
 
   $('#delete-thread-modal-button').click(deleteThread);
 
@@ -44,7 +52,10 @@ $(async () => {
 
   $('#delete-reply-modal').on('hide.bs.modal', deleteReplyModalHideHandler);
 
-  $('#delete-reply-delete-password').on('input', deleteReplyPasswordInputHandler);
+  $('#delete-reply-delete-password').on(
+    'input',
+    deleteReplyPasswordInputHandler
+  );
 
   $('#delete-reply-modal-button').click(deleteReply);
 });
@@ -85,27 +96,27 @@ const addThread = e => {
       $('#add-thread-error').text(text);
     },
   });
-}
+};
 
 const addThreadTextInputHandler = e => {
   $('#add-thread-text-error').text('');
-}
+};
 
 const addThreadDeletePasswordInputHandler = e => {
   $('#add-thread-delete-password-error').text('');
-}
+};
 
 const addThreadModalHideHandler = e => {
   $('#add-thread-form')[0].reset();
   $('#add-thread-error').text('');
   $('#add-thread-text-error').text('');
   $('#add-thread-delete-password-error').text('');
-}
+};
 
 const displayAddThreadModal = e => {
   const modal = new bootstrap.Modal($('#add-thread-modal')[0]);
   modal.show();
-}
+};
 
 const deleteReply = e => {
   const board = currentBoard;
@@ -123,14 +134,14 @@ const deleteReply = e => {
   $.ajax({
     type: 'DELETE',
     url: `/api/replies/${board}`,
-    data: { thread_id, delete_password, reply_id, },
+    data: { thread_id, delete_password, reply_id },
     success: res => {
       const modal = bootstrap.Modal.getInstance($('#delete-reply-modal')[0]);
       modal.hide();
       $(`#${reply_id} .card`)
-      .removeClass('bg-success')
-      .removeClass('bg-warning')
-      .addClass('bg-danger');
+        .removeClass('bg-success')
+        .removeClass('bg-warning')
+        .addClass('bg-danger');
 
       $(`#${reply_id} .reply-text`).text('[deleted]');
 
@@ -148,30 +159,30 @@ const deleteReply = e => {
       $('#delete-reply-delete-password-error').text(text);
     },
   });
-}
+};
 
 const deleteReplyPasswordInputHandler = e => {
   $('#delete-reply-delete-password-error').text('');
-}
+};
 
 const deleteReplyModalHideHandler = e => {
   $('#delete-reply-form')[0].reset();
   $('#delete-reply-delete-password-error').text('');
-}
+};
 
 const deleteReplyModalShowHandler = e => {
   const threadId = e.relatedTarget.getAttribute('data-thread-id');
   const replyId = e.relatedTarget.getAttribute('data-reply-id');
-  
+
   $('#delete-reply-modal-button')
-  .attr('data-thread-id', threadId)
-  .attr('data-reply-id', replyId);
-}
+    .attr('data-thread-id', threadId)
+    .attr('data-reply-id', replyId);
+};
 
 const displayDeleteReplyModal = e => {
   const modal = new bootstrap.Modal($('#delete-reply-modal')[0]);
   modal.toggle(e.currentTarget);
-}
+};
 
 const reportReply = e => {
   const board = currentBoard;
@@ -233,12 +244,12 @@ const deleteThread = e => {
 
 const deleteThreadPasswordInputHandler = e => {
   $('#delete-thread-delete-password-error').text('');
-}
+};
 
 const deleteThreadModalHideHandler = e => {
   $('#delete-thread-form')[0].reset();
   $('#delete-thread-delete-password-error').text('');
-}
+};
 
 const deleteThreadModalShowHandler = e => {
   const threadId = e.relatedTarget.getAttribute('data-thread-id');

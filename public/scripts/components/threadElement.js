@@ -1,4 +1,4 @@
-import { formatDate } from "../utils/utilities.js";
+import { formatDate } from '../utils/utilities.js';
 
 export default function createThreadElement(boardName, thread) {
   const isReported = thread.reported;
@@ -16,9 +16,7 @@ export default function createThreadElement(boardName, thread) {
                   <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <h5 class="d-flex flex-wrap my-2">
                       <span class="fw-bold">Thread:&nbsp;</span>
-                      <a class="text-white fw-bold" href="/b/${boardName}/${
-    thread._id
-  }">
+                      <a class="text-white fw-bold" href="/b/${boardName}/${thread._id}">
                         ${thread._id}
                       </a>
                     </h5>
@@ -58,4 +56,4 @@ export default function createThreadElement(boardName, thread) {
                 </div>
               </div>
             </div>`;
-};
+}
