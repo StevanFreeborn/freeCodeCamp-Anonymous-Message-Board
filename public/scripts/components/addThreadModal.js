@@ -75,6 +75,7 @@ export default function createAddThreadModal(board) {
     addThreadError.innerHTML = '';
     addThreadTextError.innerHTML = '';
     addThreadDeletePasswordError.innerHTML = '';
+    addThreadModal.remove();
   });
 
   addThreadModalButton.addEventListener('click', e => {
