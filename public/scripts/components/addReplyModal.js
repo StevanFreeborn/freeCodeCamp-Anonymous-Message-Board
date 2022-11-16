@@ -75,6 +75,7 @@ export default function createAddReplyModal(board, thread) {
     addReplyError.innerHTML = '';
     addReplyTextError.innerHTML = '';
     addReplyDeletePasswordError.innerHTML = '';
+    addReplyModal.remove();
   });
 
   addReplyModalButton.addEventListener('click', e => {
