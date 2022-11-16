@@ -47,8 +47,15 @@ const addBoardCard = board => {
 };
 
 const getBoards = async () => {
-  return await $.ajax({
-    type: 'GET',
-    url: '/api/boards',
-  });
+  try {
+    return await $.ajax({
+      type: 'GET',
+      url: '/api/boards',
+    });
+  } catch (err) {
+    const text = err?.responseJSON?.error
+      ? err.responseJSON.error
+      : err?.responseText ?? `Unable to get thread ${thread_id}`;
+    alert(text);
+  }
 };
