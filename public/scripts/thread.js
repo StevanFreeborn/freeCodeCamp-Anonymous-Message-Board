@@ -12,12 +12,10 @@ $(async () => {
       data: { thread_id },
     });
 
-    const threadComponent = createThread(board, thread);
-    $('#thread-container').append(threadComponent);
+    $('#thread-container').append(createThread(board, thread));
 
     thread.replies.forEach(reply => {
-      const replyComponent = createReply(board, reply);
-      $(`#thread-${thread._id}-reply-container`).append(replyComponent);
+      $(`#thread-${thread._id}-reply-container`).append(createReply(board, reply));
     });
   } catch (err) {
     const text = err?.responseJSON?.error

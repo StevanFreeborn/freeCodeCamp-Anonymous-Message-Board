@@ -63,13 +63,15 @@ export default function createReply(board, reply) {
     $.ajax({
       type: 'PUT',
       url: `/api/replies/${board}`,
-      data: { 
-        board: board, 
-        thread_id: reply.thread, 
-        reply_id: reply._id 
+      data: {
+        board: board,
+        thread_id: reply.thread,
+        reply_id: reply._id,
       },
       success: res => {
-        $(`#${reply._id}-card`).removeClass('bg-success').addClass('bg-warning');
+        $(`#${reply._id}-card`)
+          .removeClass('bg-success')
+          .addClass('bg-warning');
 
         $(`#${reply._id} .reply-updated`).text(
           formatDate(new Date().toISOString())
@@ -87,7 +89,7 @@ export default function createReply(board, reply) {
   });
 
   deleteButton.addEventListener('click', e => {
-    createDeleteReplyModal(board, reply).toggle(e.currentTarget);
+    createDeleteReplyModal(board, reply).show();
   });
 
   if (isReported || isDeleted) {

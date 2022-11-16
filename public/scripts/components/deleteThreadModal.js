@@ -75,7 +75,19 @@ export default function createDeleteThreadModal(board, thread) {
       success: res => {
         const modal = bootstrap.Modal.getInstance(deleteThreadModal);
         modal.hide();
-        $(`#${thread._id}`).hide(500, function () { $(this).remove()});
+        $(`#${thread._id}`).hide(500, function () { 
+          $(this).remove();
+
+          const pathSegments = window.location.pathname.split('/').slice(1);
+
+          if (pathSegments.length == 3) {
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const boardPath = pathSegments.slice(0, -1).join('/');
+            const redirectUrl = `${protocol}//${host}/${boardPath}`
+            window.location.replace(redirectUrl);
+          }
+        });
       },
       error: (res, err) => {
         const text = res?.responseJSON?.error
