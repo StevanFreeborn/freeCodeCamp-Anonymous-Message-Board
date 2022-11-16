@@ -48,7 +48,7 @@ export default function createAddThreadModal(board) {
   );
 
   const addThreadDeletePasswordInput = addThreadModal.querySelector(
-    '#add-thread-delete-password-error'
+    '#add-thread-delete-password'
   );
 
   const addThreadDeletePasswordError = addThreadModal.querySelector(
@@ -79,6 +79,8 @@ export default function createAddThreadModal(board) {
   });
 
   addThreadModalButton.addEventListener('click', e => {
+    addThreadModalButton.disabled = true;
+
     const data = formDataToJson($('#add-thread-form').serializeArray());
     const hasText = data?.text ? true : false;
     const hasDeletePassword = data?.delete_password ? true : false;
@@ -93,6 +95,7 @@ export default function createAddThreadModal(board) {
           'Please enter a delete password';
       }
 
+      addThreadModalButton.disabled = false;
       return;
     }
 
@@ -111,6 +114,7 @@ export default function createAddThreadModal(board) {
           ? res.responseJSON.error
           : res?.responseText ?? `Unable to add thread`;
         addThreadError.innerHTML = text;
+        addThreadModalButton.disabled = false;
       },
     });
   });

@@ -58,10 +58,13 @@ export default function createDeleteReplyModal(board, reply) {
   });
 
   deleteReplyButton.addEventListener('click', e => {
+    deleteReplyButton.disabled = true;
+
     const delete_password = deleteReplyPasswordInput.value;
 
     if (!delete_password) {
       deleteReplyPasswordError.innerHTML = 'Please enter a delete password';
+      deleteReplyButton.disabled = false;
       return;
     }
 
@@ -95,6 +98,7 @@ export default function createDeleteReplyModal(board, reply) {
           ? res.responseJSON.error
           : res?.responseText ?? `Unable to delete reply ${reply._id}`;
           deleteReplyPasswordError.innerHTML = text;
+          deleteReplyButton.disabled = false;
       },
     });
   });
