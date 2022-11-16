@@ -1,3 +1,5 @@
+import { formDataToJson } from './utils/utilities.js';
+
 $(function () {
   // make containers collapse and expand
   $('.collapse-expand-button').click(handleExpandCollapse);
@@ -85,12 +87,12 @@ $(function () {
     const hasThreadId = data?.thread_id ? true : false;
     const hasReplyId = data?.reply_id ? true : false;
     const hasDeletePassword = data?.delete_password ? true : false;
-  
+
     if (!hasBoard || !hasThreadId || !hasReplyId || !hasDeletePassword) {
       if (!hasBoard) {
         $('#delete-reply-board-error').text('Please enter a board');
       }
-  
+
       if (!hasThreadId) {
         $('#delete-reply-thread-id-error').text('Please enter thread id');
       }
@@ -98,16 +100,16 @@ $(function () {
       if (!hasReplyId) {
         $('#delete-reply-id-error').text('Please enter reply id');
       }
-  
+
       if (!hasDeletePassword) {
         $('#delete-reply-delete-password-error').text(
           'Please enter a delete password'
         );
       }
-  
+
       return;
     }
-  
+
     $.ajax({
       type: 'DELETE',
       url: `/api/replies/${data.board}`,
@@ -318,13 +320,6 @@ const reportReply = e => {
       displayResponse($('#report-reply-response'), res.responseJSON);
     },
   });
-};
-
-const formDataToJson = formData => {
-  return formData.reduce((prev, curr) => {
-    prev[curr.name] = curr.value;
-    return prev;
-  }, {});
 };
 
 const displayResponse = (jObj, response) => {
