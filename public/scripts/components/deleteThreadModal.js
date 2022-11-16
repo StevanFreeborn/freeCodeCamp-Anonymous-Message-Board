@@ -58,10 +58,13 @@ export default function createDeleteThreadModal(board, thread) {
   });
 
   deleteThreadButton.addEventListener('click', e => {
+    deleteThreadButton.disabled = true;
+
     const delete_password = deleteThreadPasswordInput.value;
     
     if (!delete_password) {
       deleteThreadPasswordError.innerHTML = 'Please enter a delete password';
+      deleteThreadButton.disabled = false;
       return;
     }
 
@@ -94,6 +97,7 @@ export default function createDeleteThreadModal(board, thread) {
           ? res.responseJSON.error
           : res?.responseText ?? `Unable to delete thread ${thread._id}`;
           deleteThreadPasswordError.innerHTML = text;
+          deleteThreadButton.disabled = false;
       },
     });
   });
