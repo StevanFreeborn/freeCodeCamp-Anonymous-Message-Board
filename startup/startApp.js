@@ -1,20 +1,30 @@
 import connectDb from '../database/connectDb.js';
 import runner from '../test-runner.js';
+import logger from '../logging/logger.js';
 
 export default function (app) {
   const dbConnected = connectDb();
 
   const listener = app.listen(process.env.PORT || 3000, () => {
-    console.log('Your app is listening on port ' + listener.address().port);
+    const appListMsg = 'Your app is listening on port ' + listener.address().port;
+    console.log(appListMsg);
+    logger.info(appListMsg);
 
     if (process.env.NODE_ENV === 'test' && dbConnected) {
-      console.log('Running Tests...');
+      runTestMsg = 'Running Tests...';
+      console.log(runTestMsg);
+      logger.info(runTestMsg)
+
       setTimeout(() => {
         try {
           runner.run();
-        } catch (e) {
-          console.log('Tests are not valid:');
-          console.error(e);
+        } catch (err) {
+          invalidTestMsg = 'Tests are not valid:';
+          console.log(invalidTestMsg);
+          logger.info(invalidTestMsg);
+
+          console.error(err);
+          logger.error(err);
         }
       }, 1500);
     }
