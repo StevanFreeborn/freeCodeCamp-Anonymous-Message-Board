@@ -3,6 +3,7 @@ import HashService from '../../services/hashService.js';
 import ReplyService from '../../services/replyService.js';
 import ReplyDto from '../../dtos/replyDto.js';
 import ThreadDto from '../../dtos/threadDto.js';
+import ErrorTypes from '../../errors/errorTypes.js';
 
 export default class ReplyController {
   static getRepliesByThreadId = async (req, res) => {
@@ -21,29 +22,25 @@ export default class ReplyController {
   };
 
   static createReply = async (req, res, next) => {
-    try {
-      const { thread_id, text, delete_password } = req.body;
-      const thread = await ThreadService.getThreadById(thread_id);
+    const { thread_id, text, delete_password } = req.body;
+    const thread = await ThreadService.getThreadById(thread_id);
 
-      if (thread == null) {
-        return res
-          .status(400)
-          .json({ error: `Thread with id ${thread_id} not found` });
-      }
-
-      const hash = await HashService.hash(delete_password);
-      const reply = await ReplyService.createReply(thread.id, text, hash);
-
-      thread.replies.push(reply.id);
-      thread.bumped_on = reply.bumped_on;
-      await thread.save();
-
-      const replyDto = new ReplyDto(reply);
-
-      return res.status(201).json(replyDto);
-    } catch (err) {
-      next(err);
+    if (thread == null) {
+      return res
+        .status(400)
+        .json({ error: `Thread with id ${thread_id} not found` });
     }
+
+    const hash = await HashService.hash(delete_password);
+    const reply = await ReplyService.createReply(thread.id, text, hash);
+
+    thread.replies.push(reply.id);
+    thread.bumped_on = reply.bumped_on;
+    await thread.save();
+
+    const replyDto = new ReplyDto(reply);
+
+    return res.status(201).json(replyDto);
   };
 
   static reportReplyById = async (req, res) => {

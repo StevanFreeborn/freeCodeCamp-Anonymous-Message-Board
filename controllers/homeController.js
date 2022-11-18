@@ -6,8 +6,4 @@ export default class HomeController {
   static playground = async (req, res) => {
     res.sendFile(process.cwd() + '/views/playground.html');
   };
-
-  static error = async (req, res) => {
-    res.sendFile(process.cwd() + '/views/error.html');
-  }
 }
