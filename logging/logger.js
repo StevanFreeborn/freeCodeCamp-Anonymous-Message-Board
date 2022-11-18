@@ -13,14 +13,17 @@ const createLogger = () => {
     level: 'http' || process.env.LOG_LEVEL,
     format: winston.format.combine(
       winston.format.errors({
-        stack: true
+        stack: true,
       }),
       winston.format.timestamp(),
       winston.format.json()
     ),
     exceptionHandlers: [
+      combinedfileTransport(),
       exceptionFileTransport(),
-    ]
+      consoleTransport(),
+      logTailTransport(),
+    ],
   });
 
   switch (process.env.NODE_ENV) {

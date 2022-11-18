@@ -8,7 +8,7 @@ export default function (app) {
     Object.keys(req.body).length == 0 ? undefined : req.body
   );
 
-  const httpLogMessageFormat = (tokens, req, res) => {
+  const httpLogReqMessageFormat = (tokens, req, res) => {
     return JSON.stringify({
       requestInfo: {
         method: tokens.method(req, res),
@@ -22,8 +22,22 @@ export default function (app) {
     });
   };
 
+  // const httpLogResMessageFormat = (tokens, req, res) => {
+  //   return JSON.stringify({
+  //     requestInfo: {
+  //       method: tokens.method(req, res),
+  //       url: tokens.url(req, res),
+  //       requestHeaders: tokens.requestHeaders(req, res),
+  //       requestBody: tokens.requestBody(req, res),
+  //       status: Number.parseFloat(tokens.status(req, res)),
+  //       responseTime: Number.parseFloat(tokens['response-time'](req, res)),
+  //       responseHeaders: tokens.responseHeaders(req, res),
+  //     },
+  //   });
+  // };
+
   app.use(
-    morgan(httpLogMessageFormat, {
+    morgan(httpLogReqMessageFormat, {
       stream: {
         write: message => {
           const data = JSON.parse(message);

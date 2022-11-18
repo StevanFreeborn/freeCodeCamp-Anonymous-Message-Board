@@ -33,9 +33,11 @@ export default function () {
       logger.info(disconnMsg);
     });
 
-    console.log(
-      `Server connected successfully to ${process.env.NODE_ENV} database.`
-    );
+    const connectMsg =`Server connected successfully to ${process.env.NODE_ENV} database.`;
+
+    console.log(connectMsg);
+    logger.info(connectMsg)
+
     return true;
   } catch (err) {
     console.log(err);

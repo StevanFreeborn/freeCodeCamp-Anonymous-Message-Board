@@ -20,26 +20,30 @@ export default class ReplyController {
     return res.status(200).json(threadDto);
   };
 
-  static createReply = async (req, res) => {
-    const { thread_id, text, delete_password } = req.body;
-    const thread = await ThreadService.getThreadById(thread_id);
+  static createReply = async (req, res, next) => {
+    try {
+      const { thread_id, text, delete_password } = req.body;
+      const thread = await ThreadService.getThreadById(thread_id);
 
-    if (thread == null) {
-      return res
-        .status(400)
-        .json({ error: `Thread with id ${thread_id} not found` });
+      if (thread == null) {
+        return res
+          .status(400)
+          .json({ error: `Thread with id ${thread_id} not found` });
+      }
+
+      const hash = await HashService.hash(delete_password);
+      const reply = await ReplyService.createReply(thread.id, text, hash);
+
+      thread.replies.push(reply.id);
+      thread.bumped_on = reply.bumped_on;
+      await thread.save();
+
+      const replyDto = new ReplyDto(reply);
+
+      return res.status(201).json(replyDto);
+    } catch (err) {
+      next(err);
     }
-
-    const hash = await HashService.hash(delete_password);
-    const reply = await ReplyService.createReply(thread.id, text, hash);
-
-    thread.replies.push(reply.id);
-    thread.bumped_on = reply.bumped_on;
-    await thread.save();
-
-    const replyDto = new ReplyDto(reply);
-
-    return res.status(201).json(replyDto);
   };
 
   static reportReplyById = async (req, res) => {

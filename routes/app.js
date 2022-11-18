@@ -5,6 +5,7 @@ import ThreadController from '../controllers/threadController.js';
 export default function (app) {
   app.get('/', HomeController.index);
   app.get('/playground', HomeController.playground);
+  app.get('/error', HomeController.error);
 
   app.get('/b/:board/', BoardController.index);
   app.get('/b/:board/:threadid', ThreadController.index);
