@@ -12,5 +12,5 @@ export default function (server) {
       if (err) console.log(err);
       console.log(res.body);
     });
-  }, 15 * 60000)
+  }, 5 * 60000)
 }
