@@ -2,6 +2,7 @@ import ThreadController from '../controllers/api/threadController.js';
 import ReplyController from '../controllers/api/replyController.js';
 import BoardController from '../controllers/api/boardController.js';
 import apiErrorCatcher from '../errors/apiErrorCatcher.js';
+import PingController from '../controllers/api/pingController.js';
 
 export default function (app) {
   // Boards
@@ -43,4 +44,7 @@ export default function (app) {
     '/api/replies/:board',
     apiErrorCatcher(ReplyController.deleteReplyById)
   );
+
+  // Ping
+  app.get('/api/ping', apiErrorCatcher(PingController.ping));
 }
