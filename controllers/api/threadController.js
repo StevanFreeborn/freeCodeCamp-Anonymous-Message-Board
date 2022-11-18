@@ -3,6 +3,7 @@ import HashService from '../../services/hashService.js';
 import ThreadService from '../../services/threadService.js';
 import ThreadDto from '../../dtos/threadDto.js';
 import ReplyService from '../../services/replyService.js';
+import IdValidator from '../../validators/idValidator.js';
 
 export default class ThreadController {
   static getThreadsByBoardName = async (req, res) => {
@@ -48,6 +49,12 @@ export default class ThreadController {
     // the thread id in the body with property name of report_id.
     thread_id = thread_id ?? report_id;
 
+    if (IdValidator.isValid(thread_id) == false) {
+      return res
+        .status(400)
+        .json({ error: `Thread id ${thread_id} is not a valid id` });
+    }
+
     const thread = await ThreadService.getThreadById(thread_id);
 
     if (thread == null) {
@@ -64,6 +71,13 @@ export default class ThreadController {
 
   static deleteThreadById = async (req, res) => {
     const { thread_id, delete_password } = req.body;
+
+    if (IdValidator.isValid(thread_id) == false) {
+      return res
+        .status(400)
+        .json({ error: `Thread id ${thread_id} is not a valid id` });
+    }
+
     const thread = await ThreadService.getThreadById(thread_id);
 
     if (thread == null) {
