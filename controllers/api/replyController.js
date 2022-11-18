@@ -3,11 +3,18 @@ import HashService from '../../services/hashService.js';
 import ReplyService from '../../services/replyService.js';
 import ReplyDto from '../../dtos/replyDto.js';
 import ThreadDto from '../../dtos/threadDto.js';
-import ErrorTypes from '../../errors/errorTypes.js';
+import IdValidator from '../../validators/idValidator.js';
 
 export default class ReplyController {
   static getRepliesByThreadId = async (req, res) => {
     const { thread_id } = req.query;
+
+    if (IdValidator.isValid(thread_id) == false) {
+      return res
+        .status(400)
+        .json({ error: `Thread id ${thread_id} is not a valid id` });
+    }
+
     const thread = await ThreadService.getThreadById(thread_id);
 
     if (thread == null) {
@@ -23,6 +30,13 @@ export default class ReplyController {
 
   static createReply = async (req, res, next) => {
     const { thread_id, text, delete_password } = req.body;
+
+    if (IdValidator.isValid(thread_id) == false) {
+      return res
+        .status(400)
+        .json({ error: `Thread id ${thread_id} is not a valid id` });
+    }
+
     const thread = await ThreadService.getThreadById(thread_id);
 
     if (thread == null) {
@@ -45,6 +59,13 @@ export default class ReplyController {
 
   static reportReplyById = async (req, res) => {
     const { reply_id } = req.body;
+
+    if (IdValidator.isValid(reply_id) == false) {
+      return res
+        .status(400)
+        .json({ error: `Reply id ${reply_id} is not a valid id` });
+    }
+
     const reply = await ReplyService.getReplyById(reply_id);
 
     if (reply == null) {
@@ -61,6 +82,13 @@ export default class ReplyController {
 
   static deleteReplyById = async (req, res) => {
     const { reply_id, delete_password } = req.body;
+
+    if (IdValidator.isValid(reply_id) == false) {
+      return res
+        .status(400)
+        .json({ error: `Reply id ${reply_id} is not a valid id` });
+    }
+
     const reply = await ReplyService.getReplyById(reply_id);
 
     if (reply == null) {
