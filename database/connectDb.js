@@ -23,25 +23,18 @@ export default function () {
     });
 
     mongoose.connection.on('error', err => {
-      console.log(err);
-      logger.error(err);
+      logger.error(err.message, { error: err, });
     });
 
     mongoose.connection.on('disconnected', () => {
-      disconnMsg = `Server disconnected from database at ${new Date().toISOString()}`;
-      console.log(disconnMsg);
-      logger.info(disconnMsg);
+      logger.info(`Server disconnected from database at ${new Date().toISOString()}`);
     });
 
-    const connectMsg =`Server connected successfully to ${process.env.NODE_ENV} database.`;
-
-    console.log(connectMsg);
-    logger.info(connectMsg)
+    logger.info(`Server connected successfully to ${process.env.NODE_ENV} database.`)
 
     return true;
   } catch (err) {
-    console.log(err);
-    logger.error(err);
+    logger.error(err.message, { error: err, });
     
     return false;
   }

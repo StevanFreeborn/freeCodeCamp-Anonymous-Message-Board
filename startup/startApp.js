@@ -6,25 +6,17 @@ export default function (app) {
   const dbConnected = connectDb();
 
   const listener = app.listen(process.env.PORT || 3000, () => {
-    const appListMsg = 'Your app is listening on port ' + listener.address().port;
-    console.log(appListMsg);
-    logger.info(appListMsg);
+    logger.info('Your app is listening on port ' + listener.address().port);
 
     if (process.env.NODE_ENV === 'test' && dbConnected) {
-      runTestMsg = 'Running Tests...';
-      console.log(runTestMsg);
-      logger.info(runTestMsg)
+      logger.info('Running Tests...')
 
       setTimeout(() => {
         try {
           runner.run();
         } catch (err) {
-          invalidTestMsg = 'Tests are not valid:';
-          console.log(invalidTestMsg);
-          logger.info(invalidTestMsg);
-
-          console.error(err);
-          logger.error(err);
+          logger.info('Tests are not valid:');
+          logger.error(err.message, { error: err, });
         }
       }, 1500);
     }
