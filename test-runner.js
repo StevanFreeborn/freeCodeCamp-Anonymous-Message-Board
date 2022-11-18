@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import Mocha from 'mocha';
 import fs from 'fs';
 import path from 'path';
+import logger from './logging/logger.js';
 
 var mocha = new Mocha();
 var testDir = './tests';
@@ -46,6 +47,7 @@ emitter.run = function () {
         .on('end', function () {
           emitter.report = tests;
           emitter.emit('done', tests);
+          logger.info('tests finished', { testResults: tests });
         })
         .on('suite', function (s) {
           context += s.title + separator;
