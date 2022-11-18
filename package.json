@@ -9,6 +9,8 @@
 		"dev": "nodemon server.js"
 	},
 	"dependencies": {
+		"@logtail/node": "^0.1.14",
+		"@logtail/winston": "^0.1.14",
 		"bcrypt": "^5.1.0",
 		"body-parser": "^1.15.2",
 		"chai": "^4.2.0",
@@ -21,7 +23,10 @@
 		"mongoose": "^6.7.0",
 		"morgan": "^1.10.0",
 		"nodemon": "^2.0.20",
-		"rotating-file-stream": "^3.0.4"
+		"rotating-file-stream": "^3.0.4",
+		"uuid": "^9.0.0",
+		"winston": "^3.8.2",
+		"winston-daily-rotate-file": "^4.7.1"
 	},
 	"repository": {
 		"type": "git",

@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose, { disconnect } from 'mongoose';
+import logger from '../logging/logger.js';
 
 export default function () {
   let mongoConnectionString;
@@ -22,21 +23,19 @@ export default function () {
     });
 
     mongoose.connection.on('error', err => {
-      console.log(err);
+      logger.error(err.message, { error: err, });
     });
 
     mongoose.connection.on('disconnected', () => {
-      console.log(
-        `Server disconnected from database at ${new Date().toISOString()}`
-      );
+      logger.info(`Server disconnected from database at ${new Date().toISOString()}`);
     });
 
-    console.log(
-      `Server connected successfully to ${process.env.NODE_ENV} database.`
-    );
+    logger.info(`Server connected successfully to ${process.env.NODE_ENV} database.`)
+
     return true;
   } catch (err) {
-    console.log(err);
+    logger.error(err.message, { error: err, });
+    
     return false;
   }
 }

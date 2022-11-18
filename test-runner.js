@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import Mocha from 'mocha';
 import fs from 'fs';
 import path from 'path';
+import logger from './logging/logger.js';
 
 var mocha = new Mocha();
 var testDir = './tests';
@@ -46,6 +47,7 @@ emitter.run = function () {
         .on('end', function () {
           emitter.report = tests;
           emitter.emit('done', tests);
+          logger.info('tests finished', { testResults: tests });
         })
         .on('suite', function (s) {
           context += s.title + separator;
@@ -57,37 +59,6 @@ emitter.run = function () {
     .catch(err => {
       throw err;
     });
-
-  // try {
-  //   var runner = mocha.ui('tdd').run()
-  //     .on('test end', function (test) {
-  //       // remove comments
-  //       var body = test.body.replace(/\/\/.*\n|\/\*.*\*\//g, '');
-  //       // collapse spaces
-  //       body = body.replace(/\s+/g, ' ');
-  //       var obj = {
-  //         title: test.title,
-  //         context: context.slice(0, -separator.length),
-  //         state: test.state,
-  //         // body: body,
-  //         assertions: analyser(body)
-  //       };
-  //       tests.push(obj);
-  //     })
-  //     .on('end', function () {
-  //       emitter.report = tests;
-  //       emitter.emit('done', tests)
-  //     })
-  //     .on('suite', function (s) {
-  //       context += (s.title + separator);
-
-  //     })
-  //     .on('suite end', function (s) {
-  //       context = context.slice(0, -(s.title.length + separator.length))
-  //     })
-  // } catch (e) {
-  //   throw (e);
-  // }
 };
 
 export default emitter;

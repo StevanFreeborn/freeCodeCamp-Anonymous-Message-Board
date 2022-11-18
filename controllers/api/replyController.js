@@ -3,6 +3,7 @@ import HashService from '../../services/hashService.js';
 import ReplyService from '../../services/replyService.js';
 import ReplyDto from '../../dtos/replyDto.js';
 import ThreadDto from '../../dtos/threadDto.js';
+import ErrorTypes from '../../errors/errorTypes.js';
 
 export default class ReplyController {
   static getRepliesByThreadId = async (req, res) => {
@@ -20,7 +21,7 @@ export default class ReplyController {
     return res.status(200).json(threadDto);
   };
 
-  static createReply = async (req, res) => {
+  static createReply = async (req, res, next) => {
     const { thread_id, text, delete_password } = req.body;
     const thread = await ThreadService.getThreadById(thread_id);
 
