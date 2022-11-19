@@ -3,11 +3,16 @@ import ReplyController from '../controllers/api/replyController.js';
 import BoardController from '../controllers/api/boardController.js';
 import apiErrorCatcher from '../errors/apiErrorCatcher.js';
 import PingController from '../controllers/api/pingController.js';
+import { body } from 'express-validator';
 
 export default function (app) {
   // Boards
   app.get('/api/boards', apiErrorCatcher(BoardController.getBoards));
-  app.post('/api/boards', apiErrorCatcher(BoardController.createBoard));
+  app.post(
+    '/api/boards',
+    body('name').escape(),
+    apiErrorCatcher(BoardController.createBoard)
+  );
 
   // Threads
   app.get(
@@ -16,6 +21,7 @@ export default function (app) {
   );
   app.post(
     '/api/threads/:board',
+    body('text').escape(),
     apiErrorCatcher(ThreadController.createThread)
   );
   app.put(
@@ -33,7 +39,11 @@ export default function (app) {
     apiErrorCatcher(ReplyController.getRepliesByThreadId)
   );
 
-  app.post('/api/replies/:board', apiErrorCatcher(ReplyController.createReply));
+  app.post(
+    '/api/replies/:board',
+    body('text').escape(),
+    apiErrorCatcher(ReplyController.createReply)
+  );
 
   app.put(
     '/api/replies/:board',
