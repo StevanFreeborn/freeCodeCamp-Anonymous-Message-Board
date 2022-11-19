@@ -5,7 +5,7 @@ export default function createBoardCard(board) {
                   <div class="card text-white bg-success">
                       <div class="card-header">
                           <a href="/b/${
-                            board.name
+                            encodeURIComponent(board.name)
                           }" class="link-primary fw-bold fs-5">${board.name}</a>
                       </div>
                       <div class="card-body">
